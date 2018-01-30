@@ -1,4 +1,4 @@
-﻿namespace AArta.nfrastructure.Validation
+﻿namespace Arta.Infrastructure.Validation
 {
     public interface IValidator<in TRequest>
     {

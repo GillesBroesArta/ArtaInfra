@@ -1,4 +1,4 @@
-﻿namespace AArta.nfrastructure.Logging
+﻿namespace Arta.Infrastructure.Logging
 {
     public interface IApiLogger
     {

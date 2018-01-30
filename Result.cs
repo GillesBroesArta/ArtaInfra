@@ -1,4 +1,4 @@
-﻿namespace AArta.nfrastructure
+﻿namespace Arta.Infrastructure
 {
     public class Result<TValue>
     {
