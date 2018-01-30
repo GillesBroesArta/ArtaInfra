@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Arta.Infrastructure.Transaction
 {
     public class TransactionDecorator<TRequest, TResponse> : IRequestHandlerDecorator<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        private readonly PartnerContext _context;
+        private readonly DbContext _context;
 
-        public TransactionDecorator(PartnerContext context)
+        public TransactionDecorator(DbContext context)
         {
             _context = context;
         }

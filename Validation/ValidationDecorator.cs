@@ -7,9 +7,9 @@ namespace Arta.Infrastructure.Validation
 {
     public class ValidationDecorator<TRequest, TResponse> : IRequestHandlerDecorator<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
+        private readonly IEnumerable<IRequestValidator<TRequest>> _validators;
 
-        public ValidationDecorator(IEnumerable<IValidator<TRequest>> validators)
+        public ValidationDecorator(IEnumerable<IRequestValidator<TRequest>> validators)
         {
             _validators = validators;
         }
@@ -20,7 +20,7 @@ namespace Arta.Infrastructure.Validation
             {
                 foreach (var validator in _validators.OrderBy(v => v.Order))
                 {
-                    var result = validator.Validate(request);
+                    var result = await validator.InternalValidate(request);
 
                     if (result.IsFailure)
                         return ApiResult<TResponse>.Fail(result.HttpStatusCode, result.ErrorMessage, result.ErrorCode);
