@@ -37,7 +37,7 @@ Install following NuGet packages to the project containing this folder
 The Infrastructure contains a decorator for a DbConext, this is not implemented in this repo.
 
 ## Config
-
+Startup
 ```C#
 public Startup(IHostingEnvironment env)
         {
@@ -117,7 +117,7 @@ public Startup(IHostingEnvironment env)
 		//EF
         private void ConfigureEntityFramework(IServiceCollection services)
         {
-            services.AddDbContext<PartnerContext>();
+             services.AddDbContext<DbContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("ArtaG8")); }, ServiceLifetime.Scoped);
         }
 		
 		//DI
@@ -190,4 +190,26 @@ public Startup(IHostingEnvironment env)
                 c.CustomSchemaIds(x => x.FullName);
             });
         }
+```
+appsettings
+```
+"Serilog": {
+    "WriteTo": [
+      {
+        "Name": "RollingFile",
+        "Args": { "pathFormat": "C:/temp/microservices/ServiceTemplate-{Date}.txt" }
+      }
+    ]
+  },
+
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=localhost;Initial Catalog=GucciGang;User ID=sa;Password=pwd;Trusted_Connection=no;"
+  }
+}
 ```
