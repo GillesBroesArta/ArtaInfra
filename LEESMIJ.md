@@ -33,13 +33,39 @@ Install following NuGet packages to the project containing this folder
 * Serilog.Extensions.Logging
 * Serilog.Settings.Configuration
 * Serilog.Sinks.RollingFile
+* Swashbuckle.AspNetCore
+* Swashbuckle.AspNetCore.Swagger
+* Swashbuckle.AspNetCore.SwaggerGen
 
 The Infrastructure contains a decorator for a DbConext, this is not implemented in this repo.
 
 ## Config
 Startup
 ```C#
-public Startup(IHostingEnvironment env)
+using System.IO;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.AspNetCore.Http;
+using Serilog;
+using Serilog.Events;
+using Arta.BulkChangeMSISDN.Api.Entities.DataAccess;
+using Arta.BulkChangeMSISDN.Api.Features;
+using Arta.Infrastructure;
+using Arta.Infrastructure.Logging;
+using Arta.Infrastructure.Middleware;
+using Arta.Infrastructure.Validation;
+using AutoMapper;
+using BugsBunny;
+
+namespace Arta.GucciGang.Api
+{
+    public class Startup
+    {
+        public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -48,8 +74,7 @@ public Startup(IHostingEnvironment env)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
-			
-			//Initialize logging (Serilog)
+
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(Configuration)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -62,65 +87,64 @@ public Startup(IHostingEnvironment env)
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddBugsBunny();
             services.AddMvcCore()
             .AddApiExplorer()
             .AddCors()
             .AddAuthorization()
             .AddJsonFormatters();
-			
-			//Automapper
+
             services.AddAutoMapper();
 
+            ConfigureSwagger(services);
             Configure(services);
             ConfigureEntityFramework(services);
             ConfigureHandlers(services);
             ConfigureDecorators(services);
             ConfigureValidators(services);
-			
-			//Authenticatiob
+
             services.AddAuthentication("Bearer")
             .AddIdentityServerAuthentication(options =>
             {
                 options.Authority = "http://ids:5003";
                 options.RequireHttpsMetadata = false;
-                options.ApiName = "ServiceTemplate";
-            });
+                options.ApiName = "arta.bulkchangemsisdn.api";
+            });            
 
             ConfigureConfiguration(services);
-            ConfigureSwagger(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddSerilog();
-            app.UseCors(builder =>
-                   builder.WithOrigins("*")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowAnyOrigin()
+        app.UseCors(builder =>
+               builder.WithOrigins("*")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin()
 
-                );
-
+            );
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger(c => c.RouteTemplate = "swagger/v1/swagger.json");
-			
-			//Middleware
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "Arta BulkChangeMSISDN Api");
+            });
+
             app.UseCustomExceptionHandler();
             app.UseRequestResponseLogging();
             app.UseAuthentication();
+            app.UseBugsBunny();
             app.UseMvc();
-
         }
-		
-		//EF
+
         private void ConfigureEntityFramework(IServiceCollection services)
         {
-             services.AddDbContext<DbContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("ArtaG8")); }, ServiceLifetime.Scoped);
+            services.AddDbContext<ResellerContext>();
         }
-		
-		//DI
+
         private void Configure(IServiceCollection services)
         {
             services.AddScoped<IMediator, Mediator>();
@@ -134,8 +158,7 @@ public Startup(IHostingEnvironment env)
         {
             services.AddSingleton<IConfiguration>(Configuration);
         }
-		
-		//Mediator DI
+
         private void ConfigureHandlers(IServiceCollection services)
         {
             services.Scan(scan => scan.FromEntryAssembly()
@@ -155,7 +178,7 @@ public Startup(IHostingEnvironment env)
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
             );
-
+            
             services.Scan(scan => scan.FromEntryAssembly()
                 .AddClasses(classes => classes.AssignableTo(typeof(IAsyncRequestHandler<,>)))
                 .AsImplementedInterfaces()
@@ -173,23 +196,25 @@ public Startup(IHostingEnvironment env)
         private void ConfigureValidators(IServiceCollection services)
         {
             services.Scan(scan => scan.FromEntryAssembly()
-                .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
+                .AddClasses(classes => classes.AssignableTo(typeof(IRequestValidator<>)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
             );
         }
-		
-		//SWAGGER
+
         private void ConfigureSwagger(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "ServiceTemplate", Version = "v1" });
-                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "ServiceTemplate.xml");
+                c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "Arta BulkChangeMSISDN Api", Version = "v1" });
+                var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "Arta.BulkChangeMSISDN.Api.xml");
                 c.IncludeXmlComments(filePath);
                 c.CustomSchemaIds(x => x.FullName);
             });
         }
+    }
+}
+
 ```
 appsettings
 ```
