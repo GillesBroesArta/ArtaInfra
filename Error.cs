@@ -1,4 +1,4 @@
-﻿namespace AArtaInfrastructure
+﻿namespace Arta.Infrastructure
 {
     public class Error
     {

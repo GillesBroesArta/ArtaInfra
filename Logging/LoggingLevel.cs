@@ -1,4 +1,4 @@
-﻿namespace AArtaInfrastructure.Logging
+﻿namespace AArta.nfrastructure.Logging
 {
     public enum LoggingLevel
     {

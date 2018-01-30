@@ -1,4 +1,4 @@
-﻿namespace AArtaInfrastructure
+﻿namespace AArta.nfrastructure
 {
     public struct Unit
     {

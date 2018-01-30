@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Arta.Entities.DataAccess;
 
 namespace Arta.Infrastructure.Transaction
 {
