@@ -136,13 +136,13 @@ namespace Arta.GucciGang.Api
             app.UseCustomExceptionHandler();
             app.UseRequestResponseLogging();
             app.UseAuthentication();
-            app.UseBugsBunny();
             app.UseMvc();
         }
 
         private void ConfigureEntityFramework(IServiceCollection services)
         {
             services.AddDbContext<ResellerContext>();
+            //services.AddDbContext<ResellerContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         private void Configure(IServiceCollection services)
