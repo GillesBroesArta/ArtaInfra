@@ -94,6 +94,7 @@ namespace Arta.GucciGang.Api
             .AddAuthorization()
             .AddJsonFormatters();
 
+            services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());  
             services.AddAutoMapper();
 
             ConfigureSwagger(services);
@@ -117,7 +118,6 @@ namespace Arta.GucciGang.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddSerilog();
         app.UseCors(builder =>
                builder.WithOrigins("*")
                     .AllowAnyHeader()
