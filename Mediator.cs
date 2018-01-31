@@ -33,13 +33,5 @@ namespace Arta.Infrastructure
 
             return handlerWrapper.Handle(request, _services);
         }
-
-
-        public object GetHandler(Type requestType, Type responseType)
-        {
-            var handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, responseType);
-
-            return _services.GetService(handlerType);
-        }
     }
 }
