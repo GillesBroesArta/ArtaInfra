@@ -142,7 +142,7 @@ namespace Arta.GucciGang.Api
         private void ConfigureEntityFramework(IServiceCollection services)
         {
             services.AddDbContext<ResellerContext>();
-            //services.AddDbContext<ResellerContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<ResellerContext>(options => { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); }, ServiceLifetime.Scoped);
         }
 
         private void Configure(IServiceCollection services)
