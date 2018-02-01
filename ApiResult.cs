@@ -56,6 +56,10 @@ namespace Arta.Infrastructure
             return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage);
         }
 
+        public static ApiResult<TValue> BadRequest(string errorMessage, string errorCode)
+        {
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage, errorCode);
+        }
         public static ApiResult<TValue> NotFound(string errorMessage)
         {
             return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.NotFound, errorMessage);
