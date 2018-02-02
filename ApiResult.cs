@@ -60,9 +60,9 @@ namespace Arta.Infrastructure
         {
             return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage, errorCode);
         }
-        public static ApiResult<TValue> NotFound(string errorMessage)
+        public static ApiResult<TValue> NotFound(string errorMessage, string errorCode = null)
         {
-            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.NotFound, errorMessage);
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.NotFound, errorMessage, errorCode);
         }
 
         public static ApiResult<TValue> InternalServerError(string errorMessage)
@@ -77,7 +77,7 @@ namespace Arta.Infrastructure
 
         public static ApiResult<TValue> Fail(int httpStatusCode, string errorMessage, string errorCode, TValue result = default(TValue))
         {
-            return new ApiResult<TValue>(result, false, httpStatusCode, errorMessage);
+            return new ApiResult<TValue>(result, false, httpStatusCode, errorMessage, errorCode);
         }
 
         public static ApiResult<TValue> Translate(ApiResult result, TValue value)
@@ -138,9 +138,9 @@ namespace Arta.Infrastructure
             return new ApiResult(false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage);
         }
 
-        public static ApiResult NotFound(string errorMessage)
+        public static ApiResult NotFound(string errorMessage, string errorCode = null)
         {
-            return new ApiResult(false, (int)System.Net.HttpStatusCode.NotFound, errorMessage);
+            return new ApiResult(false, (int)System.Net.HttpStatusCode.NotFound, errorMessage, errorCode);
         }
 
         public static ApiResult InternalServerError(string errorMessage)
@@ -150,7 +150,7 @@ namespace Arta.Infrastructure
 
         public static ApiResult Fail(int httpStatusCode, string errorMessage, string errorCode = null)
         {
-            return new ApiResult(false, httpStatusCode, errorMessage);
+            return new ApiResult(false, httpStatusCode, errorMessage, errorCode);
         }
 
         public static ApiResult ValidationError(string errorMessage, string errorCode)
