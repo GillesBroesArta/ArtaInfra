@@ -10,8 +10,11 @@ namespace Arta.Infrastructure
                 ? new ObjectResult(null)
                     { StatusCode = (int)result.HttpStatusCode }
 
-                : new ObjectResult(new Error { ErrorMessage = result.ErrorMessage })
-                    { StatusCode = (int)result.HttpStatusCode };
+                : result.ErrorCode == null
+                    ? new ObjectResult(new Error { ErrorMessage = result.ErrorMessage })
+                        { StatusCode = result.HttpStatusCode }
+                    : new ObjectResult(new ErrorWithErrorCode { ErrorMessage = result.ErrorMessage, ErrorCode = result.ErrorCode })
+                        { StatusCode = result.HttpStatusCode };
         }
 
         public static IActionResult ToActionResult<TResponse>(ApiResult<TResponse> result)
