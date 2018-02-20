@@ -56,7 +56,7 @@ namespace Arta.Infrastructure
             return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage);
         }
 
-        public static ApiResult<TValue> BadRequest(string errorMessage, string errorCode)
+        public static ApiResult<TValue> BadRequest(string errorMessage, string errorCode = null)
         {
             return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage, errorCode);
         }
@@ -70,12 +70,12 @@ namespace Arta.Infrastructure
             return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.InternalServerError, errorMessage);
         }
 
-        public static ApiResult<TValue> ValidationError(string errorMessage, string errorCode)
+        public static ApiResult<TValue> ValidationError(string errorMessage, string errorCode = null)
         {
             return new ApiResult<TValue>(default(TValue), false, 460, errorMessage, errorCode);
         }
 
-        public static ApiResult<TValue> Fail(int httpStatusCode, string errorMessage, string errorCode, TValue result = default(TValue))
+        public static ApiResult<TValue> Fail(int httpStatusCode, string errorMessage, string errorCode = null, TValue result = default(TValue))
         {
             return new ApiResult<TValue>(result, false, httpStatusCode, errorMessage, errorCode);
         }
@@ -153,7 +153,7 @@ namespace Arta.Infrastructure
             return new ApiResult(false, httpStatusCode, errorMessage, errorCode);
         }
 
-        public static ApiResult ValidationError(string errorMessage, string errorCode)
+        public static ApiResult ValidationError(string errorMessage, string errorCode = null)
         {
             return new ApiResult(false, 460, errorMessage, errorCode);
         }
