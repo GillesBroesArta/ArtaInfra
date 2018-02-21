@@ -70,6 +70,11 @@ namespace Arta.Infrastructure
             return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.InternalServerError, errorMessage);
         }
 
+        public static ApiResult<TValue> NotAccepted(string errorMessage)
+        {
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.NotAccepted, errorMessage);
+        }
+
         public static ApiResult<TValue> ValidationError(string errorMessage, string errorCode = null)
         {
             return new ApiResult<TValue>(default(TValue), false, 460, errorMessage, errorCode);
