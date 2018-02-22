@@ -49,6 +49,13 @@ namespace Arta.Infrastructure
         Task<HttpServiceResult<T>> PostWithErrorResult<T>(Uri uri) where T : class;
 
         /// <summary>
+        /// Puts to the given uri without a resource.
+        /// </summary>
+        /// <param name="uri">Uri where to the request is done.</param>
+        /// <returns></returns>
+        Task<HttpServiceResult> Put(Uri uri);
+
+        /// <summary>
         /// Puts a resource to the given uri.
         /// </summary>
         /// <typeparam name="TRequest">Type of the object to put.</typeparam>
@@ -165,6 +172,15 @@ namespace Arta.Infrastructure
             var content = JsonConvert.SerializeObject(resource);
             var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
             var response = await _client.PutAsync(uri, stringContent);
+            var resultSerialized = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+                return HttpServiceResult.Fail($"Error occurred while performing put to {uri}: {response} - {resultSerialized}", null, (int)response.StatusCode);
+            return HttpServiceResult.Ok((int)response.StatusCode);
+        }
+
+        public async Task<HttpServiceResult> Put(Uri uri)
+        {
+            var response = await _client.PutAsync(uri, null);
             var resultSerialized = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
                 return HttpServiceResult.Fail($"Error occurred while performing put to {uri}: {response} - {resultSerialized}", null, (int)response.StatusCode);
