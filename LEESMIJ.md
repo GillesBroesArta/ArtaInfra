@@ -20,8 +20,6 @@ git submodule add git@github.com:Artilium/ArtaInfra.git
 ```
 
 ## Build
-
-
 Install following NuGet packages to the project containing this folder
 * AutoMapper
 * AutoMapper.Extensions.Microsoft.DependencyInjection
@@ -238,3 +236,4 @@ appsettings
   }
 }
 ```
+test
