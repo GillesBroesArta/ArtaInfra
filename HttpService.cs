@@ -56,6 +56,14 @@ namespace Arta.Infrastructure
         Task<HttpServiceResult> Put(Uri uri);
 
         /// <summary>
+        /// Puts to the given uri without a resource.
+        /// </summary>
+        /// <typeparam name="TResponse">Type of the response</typeparam>
+        /// <param name="uri">Uri where to the request is done.</param>
+        /// <returns></returns>
+        Task<HttpServiceResult<TResponse>> Put<TResponse>(Uri uri) where TResponse : class;
+
+        /// <summary>
         /// Puts a resource to the given uri.
         /// </summary>
         /// <typeparam name="TRequest">Type of the object to put.</typeparam>
@@ -185,6 +193,15 @@ namespace Arta.Infrastructure
             if (!response.IsSuccessStatusCode)
                 return HttpServiceResult.Fail($"Error occurred while performing put to {uri}: {response} - {resultSerialized}", null, (int)response.StatusCode);
             return HttpServiceResult.Ok((int)response.StatusCode);
+        }
+
+        public async Task<HttpServiceResult<TResponse>> Put<TResponse>(Uri uri) where TResponse : class
+        {
+            var response = await _client.PutAsync(uri, null);
+            var resultSerialized = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+                return HttpServiceResult<TResponse>.Ok(JsonConvert.DeserializeObject<TResponse>(resultSerialized), (int)response.StatusCode);
+            return HttpServiceResult<TResponse>.Fail($"Error occurred while performing put to {uri} : {response}", null, (int)response.StatusCode);
         }
 
         public async Task<HttpServiceResult<TResponse>> PatchWithErrorResult<TRequest, TResponse>(Uri uri, TRequest resource) where TRequest : class
