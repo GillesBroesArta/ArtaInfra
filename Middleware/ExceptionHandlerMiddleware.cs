@@ -24,7 +24,7 @@ namespace Arta.Infrastructure.Middleware
             }
             catch (Exception ex)
             {
-                logger.LogError($"{ex}", LoggingType.Unknown);
+                logger.LogException(ex);
 
                 var result = JsonConvert.SerializeObject(new Error { ErrorMessage = "An unhandled exception occurred." });
                 context.Response.ContentType = "application/json";

@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Arta.Infrastructure.Logging
 {
@@ -15,20 +16,32 @@ namespace Arta.Infrastructure.Logging
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public void LogInformation(string message, LoggingType loggingType)
+        public void LogInformation(string message, LoggingType? loggingType = null) 
         {
-            var traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier;
-            var fileLogging = $"[{loggingType}] - {traceIdentifier} - {message}";
-
-            _logger.LogInformation(fileLogging);
+            Log("ApiInformation", new { message, loggingType = loggingType != null ? loggingType.ToString() : null, traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier});
         }
 
-        public void LogError(string message, LoggingType loggingType)
+        public void LogException(Exception ex)
         {
-            var traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier;
-            var fileLogging = $"[{loggingType}] - {traceIdentifier} - {message}";
+            LogException(null, ex);
+        }
 
-            _logger.LogError(fileLogging);
+        public void LogException(string message, Exception ex)
+        {
+            Log("ApiError", new { message, exception = ex.ToString(),  traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier });
+        }
+        
+        public void LogError(string error)
+        {
+            Log("ApiError", new { error,  traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier });
+        }
+
+        private void Log<T>(string category, T contents)
+        {
+            var settings = new JsonSerializerSettings();
+            settings.NullValueHandling = NullValueHandling.Ignore;
+            var logging = $"[{category}] {JsonConvert.SerializeObject(contents, settings)}";
+            _logger.LogInformation(logging);
         }
     }
 }
