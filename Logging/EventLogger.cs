@@ -14,22 +14,22 @@ namespace Arta.Infrastructure.Logging
             _logger = logger;
         }
 
-        public void LogInformation(string message, Guid id)
+        public void LogInformation(string message, Guid? id)
         {
             Log("EventInformation", new { message, id });
         }
 
-        public void LogException(Exception ex, Guid id)
+        public void LogException(Exception ex, Guid? id)
         {
             LogException(null, ex, id);
         }
 
-        public void LogException(string message, Exception ex, Guid id)
+        public void LogException(string message, Exception ex, Guid? id)
         {
             Log("EventError", new { message, exception = ex.ToString(), id });
         }
         
-        public void LogError(string error, Guid id)
+        public void LogError(string error, Guid? id)
         {
             Log("EventError", new { error, id });
         }
