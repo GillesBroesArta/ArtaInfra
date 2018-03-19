@@ -1,10 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Arta.Infrastructure;
-using Arta.Subscriptions.Api.Configuration;
-using Arta.Subscriptions.Api.Services.RequestResponse.PartnerService;
 using Microsoft.Extensions.Caching.Memory;
-using Arta.Subscriptions.Api.Infrastructure;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
@@ -28,7 +25,7 @@ namespace Arta.Infrastructure
         public JwtService(IHttpService httpService, ClientConfiguration clientConfiguration, AuthenticationConfiguration authenticationConfiguration, IMemoryCache cache)
         {
             _httpService = httpService;
-            _baseUri = $"{clientConfiguration.AuthenticationService.RemoveTrailingSlash()}";
+            _baseUri = $"{clientConfiguration.AuthenticationApi.RemoveTrailingSlash()}";
             _authenticationConfiguration = authenticationConfiguration;
             _cache = cache;
         }

@@ -31,5 +31,7 @@ namespace Arta.Infrastructure
             return true;
         }
 
+        public static string RemoveTrailingSlash(this string value) => value.EndsWith("/") ? value.TrimEnd('/') : value;
+
     }
 }
