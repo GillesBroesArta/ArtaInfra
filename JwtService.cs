@@ -31,21 +31,24 @@ namespace Arta.Infrastructure
         }
 
         public async Task<HttpServiceResult<GetJwtResponse>> GetJwt() 
-        {           
-            return await _cache.GetOrCreate<Task<HttpServiceResult<GetJwtResponse>>>("MicroserviceJwt",
-            cacheEntry =>
-            {
-                var keyValues = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("client_id", _authenticationConfiguration.ClientId),
-                    new KeyValuePair<string, string>("client_secret", _authenticationConfiguration.ClientSecret),
-                    new KeyValuePair<string, string>("grant_type", _authenticationConfiguration.GrantType),
-                    new KeyValuePair<string, string>("scope", _authenticationConfiguration.Scope)
-                };
+        {   
 
-                cacheEntry.SetAbsoluteExpiration(TimeSpan.FromMinutes(55));
-                return _httpService.PostAsFormData<GetJwtResponse>(new Uri($"{_baseUri}/connect/token"), keyValues);
-            });
+            var keyValues = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("client_id", _authenticationConfiguration.ClientId),
+                new KeyValuePair<string, string>("client_secret", _authenticationConfiguration.ClientSecret),
+                new KeyValuePair<string, string>("grant_type", _authenticationConfiguration.GrantType),
+                new KeyValuePair<string, string>("scope", _authenticationConfiguration.Scope)
+            };
+
+            var jwtResponse = _cache.Get<HttpServiceResult<GetJwtResponse>>("MicroserviceJwt");
+
+            if(jwtResponse != null && jwtResponse.IsSuccessful)
+                return jwtResponse;
+
+            var newJwtResponse = await _httpService.PostAsFormData<GetJwtResponse>(new Uri($"{_baseUri}/connect/token"), keyValues);
+            _cache.Set("MicroService", jwtResponse, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(55)));
+            return newJwtResponse;
         }
     }
 }
