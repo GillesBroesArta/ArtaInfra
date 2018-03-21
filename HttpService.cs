@@ -115,7 +115,7 @@ namespace Arta.Infrastructure
         public async Task<HttpServiceResult<T>> Get<T>(Uri uri, Action<HttpRequestMessage> action = null) where T : class
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-            action(request);
+            if(action != null) action(request);
             var response = await _client.SendAsync(request);
             var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
