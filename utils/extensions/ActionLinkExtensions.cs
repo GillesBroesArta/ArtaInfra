@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 
-namespace ArtaInfra.Utils.Extentsions
+namespace ArtaInfra.Utils.Extensions
 {
     public static class ActionLinkExtensions
     {

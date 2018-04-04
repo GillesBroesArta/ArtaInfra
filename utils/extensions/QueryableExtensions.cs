@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Remotion.Linq.Parsing.Structure;
 
-namespace ArtaInfra.Utils.Extentsions
+namespace ArtaInfra.Utils.Extensions
 {
     public static class QueryableExtensions
     {

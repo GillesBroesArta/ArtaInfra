@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ArtaInfra.Utils.Extentsions;
+using ArtaInfra.Utils.Extensions;
 
 namespace ArtaInfra.Utils.Helpers
 {
