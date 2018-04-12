@@ -1,70 +1,93 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Arta.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.Extensions.Primitives;
 
 namespace ArtaInfra.Utils.Extensions
 {
     public static class ActionLinkExtensions
     {
+
+        public static string GetForwardedProtoHeader(this IHttpContextAccessor httpContextAccessor)
+        {
+            StringValues stringValues;
+            return httpContextAccessor.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Proto", out stringValues) ? stringValues.FirstOrDefault() : httpContextAccessor.HttpContext.Request.Scheme.ToString();
+        }
+
+        public static string GetForwardedHostHeader(this IHttpContextAccessor httpContextAccessor)
+        {
+            StringValues stringValues;
+            return httpContextAccessor.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Host", out stringValues) ? stringValues.FirstOrDefault() : httpContextAccessor.HttpContext.Request.Host.ToString();
+        }
+
+        public static string GetForwardedUriHeader(this IHttpContextAccessor httpContextAccessor)
+        {
+            StringValues stringValues;
+            return httpContextAccessor.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Uri", out stringValues) ? stringValues.FirstOrDefault() : httpContextAccessor.HttpContext.Request.Path.ToString();
+        }
+
         public static string GetSelfLink(this IHttpContextAccessor httpContextAccessor)
         {
-            return httpContextAccessor.HttpContext?.Request?.GetDisplayUrl();
+            var urlPath = GetForwardedUriHeader(httpContextAccessor);
+            return $"{GetBaseLink(httpContextAccessor)}{urlPath}{httpContextAccessor.HttpContext.Request.QueryString}";
+        }
+        
+        public static string GetBaseLink(this IHttpContextAccessor httpContextAccessor)
+        {
+            var baseUrl = GetForwardedHostHeader(httpContextAccessor);
+            var protocol = GetForwardedProtoHeader(httpContextAccessor);
+            return $"{protocol}://{baseUrl.RemoveTrailingSlash()}";
         }
 
         public static Dictionary<string, string> AddSelfLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor)
         {
-            if (links == null) links = new Dictionary<string, string>();
-            links.Add("URL", $"{httpContextAccessor.GetSelfLink()}");
+            if (links == null ) links = new Dictionary<string, string>();
+            links.Add("URL",$"{httpContextAccessor.GetSelfLink()}");
             return links;
         }
 
-        public static Dictionary<string, string> AddLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor, string linkName, string partner, string reference)
+        public static string GetFullLink(IHttpContextAccessor httpContextAccessor, string partner, string reference)
         {
-            if (links == null) links = new Dictionary<string, string>();
             var partnerRef = string.IsNullOrEmpty(partner) ? "" : $"partners/{partner}";
-            links.Add($"{linkName}", $"{httpContextAccessor.HttpContext?.Request?.Scheme}://{httpContextAccessor.HttpContext?.Request?.Host}{httpContextAccessor.HttpContext?.Request?.PathBase}/{partnerRef}/{reference}");
+            return $"{GetBaseLink(httpContextAccessor)}/{partnerRef}/{reference}";
+        }
+
+        public static Dictionary<string, string> AddLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, string partner, string reference)
+        {
+            if (links == null ) links = new Dictionary<string, string>();
+            links.Add($"{linkName}", GetFullLink(httpContextAccessor, partner, reference));
             return links;
         }
 
-        public static Dictionary<string, string> AddLink(this Dictionary<string, string> links, string linkName, string link)
+        public static Dictionary<string, string> AddPagingLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, int offset, int limit)
         {
-            if (links == null) links = new Dictionary<string, string>();
-            links.Add($"{linkName}", link);
-            return links;
-        }
+            if (links == null ) links = new Dictionary<string, string>();
+            var link = GetSelfLink(httpContextAccessor);
 
-        public static Dictionary<string, string> AddPagingLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor, string linkName, int offset, int limit)
-        {
-            if (links == null) links = new Dictionary<string, string>();
-            var link = httpContextAccessor.HttpContext?.Request?.GetDisplayUrl();
-
-            if (link != null)
+            if (link.Contains("offset"))
             {
-                if (link.Contains("offset"))
-                {
-                    //Update Offset
-                    var offsetRegex = @"offset=\d+";
-                    link = Regex.Replace(link, offsetRegex, $"offset={offset}");
-                }
-                else
-                {
-                    //Add filter sign for get all
-                    link = !link.Contains("?") ? $"{link}?offset={offset}" : $"{link}&offset={offset}";
-                }
-
-                if (link.Contains("limit"))
-                {
-                    //Update limit
-                    var limitRegex = @"limit=\d+";
-                    link = Regex.Replace(link, limitRegex, $"limit={limit}");
-                }
-                else link = !link.Contains("?") ? $"{link}?limit={limit}" : $"{link}&limit={limit}";
-
-                links.Add($"{linkName}", $"{link}");
+                //Update Offset
+                var offsetRegex = @"offset=\d+";
+                link = Regex.Replace(link, offsetRegex, $"offset={offset}");                
+            }
+            else
+            {
+                //Add filter sign for get all
+                link = !link.Contains("?") ? $"{link}?offset={offset}" : $"{link}&offset={offset}";
             }
 
+            if (link.Contains("limit"))
+            {
+                //Update limit
+                var limitRegex = @"limit=\d+";
+                link = Regex.Replace(link, limitRegex, $"limit={limit}");
+            }
+            else link = !link.Contains("?") ? $"{link}?limit={limit}" : $"{link}&limit={limit}";
+            links.Add($"{linkName}", $"{link}");
             return links;
         }
-    }
+    }        
 }

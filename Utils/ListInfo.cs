@@ -4,9 +4,9 @@ namespace ArtaInfra.Utils
 {
     public class ListInfo : ActionLinks
     {
-        public int Size { get; set; }
-        public int Count { get; set; }
-        public bool HasMore { get; set; }
+        public int Size { get; set; } = 0;
+        public int Count { get; set; } = 0;
+        public bool HasMore { get; set; } = false;
     }
 
     public class ActionLinks

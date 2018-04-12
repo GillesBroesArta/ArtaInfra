@@ -86,7 +86,9 @@ namespace Arta.GucciGang.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddBugsBunny();
-            services.AddMvcCore()
+            services.AddMvcCore(o => {
+                o.Conventions.Add(new CommaSeparatedQueryStringConvention());
+            })
             .AddApiExplorer()
             .AddCors()
             .AddAuthorization()
