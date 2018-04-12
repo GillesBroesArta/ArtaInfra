@@ -34,6 +34,7 @@ namespace ArtaInfra.Utils.Pagination
                 if (source != null)
                 {
                     AddRange((IEnumerable<U>)source);
+                    CreateActionLinks();
                     return;
                 }
             }
