@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Arta.Infrastructure;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Arta.Infrastructure
 {
