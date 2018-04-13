@@ -100,6 +100,19 @@ namespace Arta.Infrastructure
         /// <returns></returns>
         Task<HttpServiceResult<TResponse>> PatchWithErrorResult<TRequest, TResponse>(Uri uri, TRequest resource, Action<HttpRequestMessage> action = null) where TRequest : class
                                                                                                                                                            where TResponse : class;
+
+        /// <summary>
+        /// Patches a resource at the given uri.
+        /// </summary>
+        /// <typeparam name="TRequest">Type of the patch object.</typeparam>
+        /// <typeparam name="TResponse">Type of the response</typeparam>
+        /// <typeparam name="TResolver">Type of the JsonConvert contract resolver to ignore values not initialy set</typeparam>
+        /// <param name="uri">Uri where to the request is done.</param>
+        /// <returns></returns>
+        Task<HttpServiceResult<TResponse>> PatchWithErrorResult<TRequest, TResponse, TResolver>(Uri uri,
+            TRequest resource, Action<HttpRequestMessage> action = null, TResolver jsonContractResolver = null) where TRequest : class
+            where TResponse : class
+            where TResolver : DefaultContractResolver;
     }
 
     public class HttpService : IHttpService
@@ -246,10 +259,18 @@ namespace Arta.Infrastructure
             return HttpServiceResult<TResponse>.Fail($"Error occurred while performing put to {uri} : {response}", null, (int)response.StatusCode);
         }
 
-        public async Task<HttpServiceResult<TResponse>> PatchWithErrorResult<TRequest, TResponse>(Uri uri, TRequest resource, Action<HttpRequestMessage> action = null) where TRequest : class
-                                                                                                                                                                        where TResponse : class
+        public async Task<HttpServiceResult<TResponse>> PatchWithErrorResult<TRequest, TResponse>(Uri uri, TRequest resource, Action<HttpRequestMessage> action = null) where TRequest : class where TResponse : class
         {
-            var content = JsonConvert.SerializeObject(resource);
+            return await PatchWithErrorResult<TRequest, TResponse, DefaultContractResolver>(uri, resource, action);
+        }
+
+        public async Task<HttpServiceResult<TResponse>> PatchWithErrorResult<TRequest, TResponse, TResolver>(Uri uri, TRequest resource, Action<HttpRequestMessage> action = null, TResolver jsonContractResolver = null) where TRequest : class where TResponse : class where TResolver : DefaultContractResolver
+        {
+            string content;
+
+            if (jsonContractResolver != null) content = JsonConvert.SerializeObject(resource, new JsonSerializerSettings {ContractResolver = jsonContractResolver});
+            else content = JsonConvert.SerializeObject(resource);
+
             var stringContent = new StringContent(content, Encoding.UTF8, "application/json");
             var request = new HttpRequestMessage(new HttpMethod("PATCH"), uri);
             if(action != null) action(request);
@@ -265,7 +286,5 @@ namespace Arta.Infrastructure
                 ? HttpServiceResult<TResponse>.Fail(failedJson.ErrorMessage, failedJson.ErrorCode, (int)response.StatusCode)
                 : HttpServiceResult<TResponse>.Fail($"Error occurred while performing patch to {uri}: {response} - {resultSerialized}", null, (int)response.StatusCode);
         }
-
-
     }
 }
