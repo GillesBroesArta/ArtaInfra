@@ -11,15 +11,15 @@ namespace ArtaInfra.Utils.Pagination
 {
 
     //https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/sort-filter-page
-    public class PaginatedList<T, U> : List<U> where T:class
-    {        
+    public class PaginatedList<T, U> : List<U> where T : class
+    {
         private static IHttpContextAccessor _httpContextAccessor;
 
         public int Offset { get; }
         public int Limit { get; }
         public int Total { get; }
         public ListInfo ListInfo { get; private set; }
-        
+
         public PaginatedList(List<T> source, int total, int offset, int limit)
         {
             Offset = offset; //Start position
@@ -57,7 +57,7 @@ namespace ArtaInfra.Utils.Pagination
                 Count = Total
             };
             ListInfo.Links.AddSelfLink(_httpContextAccessor);
-            if (Total == 0 || Total <= Limit) return; //Early out when no paging is possible
+            if (Total == 0 || Total <= Limit || Limit == 0) return; //Early out when no paging is possible
 
             ListInfo.Links.AddPagingLink(_httpContextAccessor, "first", 0, Limit);
             var previous = Offset - Limit > 0 ? Offset - Limit : 0;
@@ -94,9 +94,11 @@ namespace ArtaInfra.Utils.Pagination
             if (count == 0)
                 return new PaginatedList<T, U>(new List<T>(), 0, 0, 0);
 
-            var items = await source.Skip(offset).Take(limit).ToListAsync();
+            List<T> items = new List<T>();
+            if (limit > 0 && offset < count)
+                items = await source.Skip(offset).Take(limit).ToListAsync();
             return new PaginatedList<T, U>(items, count, offset, limit);
-        }       
+        }
     }
 }
 
