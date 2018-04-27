@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Arta.Sessions.Api.ArtaInfra.Middleware;
+using Microsoft.AspNetCore.Builder;
 
 namespace Arta.Infrastructure.Middleware { 
     public static class Extensions
@@ -11,6 +12,11 @@ namespace Arta.Infrastructure.Middleware {
         public static IApplicationBuilder UseCustomExceptionHandler(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<ExceptionHandlerMiddleware>();
+        }
+
+        public static IApplicationBuilder UseGenericFailureToApiResponseMapper(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<GenericFailureToApiResponseMapper>();
         }
     }
 }
