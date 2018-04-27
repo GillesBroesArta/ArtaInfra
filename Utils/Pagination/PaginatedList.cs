@@ -57,7 +57,14 @@ namespace ArtaInfra.Utils.Pagination
                 Count = Total
             };
             ListInfo.Links.AddSelfLink(_httpContextAccessor);
-            if (Total == 0 || Total <= Limit || Limit == 0) return; //Early out when no paging is possible
+            if (Total == 0 || Total <= Limit || Limit == 0) 
+            {
+                ListInfo.Links.Add("first", null);
+                ListInfo.Links.Add("previous", null);
+                ListInfo.Links.Add("next", null);
+                ListInfo.Links.Add("last", null);
+                return; //Early out when no paging is possible
+            }
 
             ListInfo.Links.AddPagingLink(_httpContextAccessor, "first", 0, Limit);
             var previous = Offset - Limit > 0 ? Offset - Limit : 0;
