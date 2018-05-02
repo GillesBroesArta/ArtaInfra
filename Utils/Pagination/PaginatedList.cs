@@ -90,6 +90,10 @@ namespace ArtaInfra.Utils.Pagination
         {
             _httpContextAccessor = httpContextAccessor;
 
+            //Use defaults value according to generic specs 
+	    if (limit < 0)
+                limit = 100;
+
             int count;
             //BEWARE: the results can be incorrect, the CountAsync query has a bug, not using the inner join (https://github.com/aspnet/EntityFrameworkCore/issues/8201)
             if (countFromInnerJoin.HasValue)
