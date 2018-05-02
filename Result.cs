@@ -4,14 +4,14 @@
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorMessage { get; }
+        public string ErrorDescription { get; }
         public TValue Value { get; }
 
-        internal Result(TValue value, bool isSuccessful, string errorMessage)
+        internal Result(TValue value, bool isSuccessful, string errorDescription)
         {
             Value = value;
             IsSuccessful = isSuccessful;
-            ErrorMessage = errorMessage;
+            ErrorDescription = errorDescription;
         }
 
         public static Result<TValue> Ok(TValue value)
@@ -19,9 +19,9 @@
             return new Result<TValue>(value, true, null);
         }
 
-        public static Result<TValue> Fail(string errorMessage)
+        public static Result<TValue> Fail(string errorDescription)
         {
-            return new Result<TValue>(default(TValue), false, errorMessage);
+            return new Result<TValue>(default(TValue), false, errorDescription);
         }
     }
 
@@ -29,12 +29,12 @@
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorMessage { get; }
+        public string ErrorDescription{ get; }
 
-        internal Result(bool isSuccessful, string errorMessage)
+        internal Result(bool isSuccessful, string errorDescription)
         {
             IsSuccessful = isSuccessful;
-            ErrorMessage = errorMessage;
+            ErrorDescription = errorDescription;
         }
 
         public static Result Ok()
@@ -42,9 +42,9 @@
             return new Result(true, null);
         }
 
-        public static Result Fail(string errorMessage)
+        public static Result Fail(string errorDescription)
         {
-            return new Result(false, errorMessage);
+            return new Result(false, errorDescription);
         }
     }
 }
