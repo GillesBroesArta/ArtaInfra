@@ -4,7 +4,7 @@
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorDescription { get; }
+        public string ErrorMessage { get; }
         public TValue Value { get; }
         public string ErrorCode { get; }
         public int HttpStatusCode { get; }
@@ -13,7 +13,7 @@
         {
             Value = value;
             IsSuccessful = isSuccessful;
-            ErrorDescription = errorMessage;
+            ErrorMessage = errorMessage;
             ErrorCode = errorCode;
             HttpStatusCode = httpStatusCode;
         }
@@ -33,14 +33,14 @@
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorDescription { get; }
+        public string ErrorMessage { get; }
         public string ErrorCode { get; }
         public int HttpStatusCode { get; }
 
         internal HttpServiceResult(bool isSuccessful, string errorMessage, string errorCode, int httpStatusCode)
         {
             IsSuccessful = isSuccessful;
-            ErrorDescription = errorMessage;
+            ErrorMessage = errorMessage;
             ErrorCode = errorCode;
             HttpStatusCode = httpStatusCode;
         }

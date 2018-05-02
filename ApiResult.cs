@@ -6,7 +6,7 @@ namespace Arta.Infrastructure
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorDescription{ get; }
+        public string ErrorMessage{ get; }
 
         public int HttpStatusCode { get; }
         public TValue Value { get; }
@@ -16,7 +16,7 @@ namespace Arta.Infrastructure
         {
             Value = value;
             IsSuccessful = isSuccessful;
-            ErrorDescription = errorMessage;
+            ErrorMessage = errorMessage;
             HttpStatusCode = httpStatusCode;
             ErrorCode = errorCode;
         }
@@ -92,7 +92,7 @@ namespace Arta.Infrastructure
 
         public static ApiResult<TValue> Translate(ApiResult result, TValue value)
         {
-            return new ApiResult<TValue>(value, result.IsSuccessful, result.HttpStatusCode, result.ErrorDescription);
+            return new ApiResult<TValue>(value, result.IsSuccessful, result.HttpStatusCode, result.ErrorMessage);
         }
     }
 
@@ -100,7 +100,7 @@ namespace Arta.Infrastructure
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorDescription { get; }
+        public string ErrorMessage { get; }
 
         public int HttpStatusCode { get; }
         public string ErrorCode { get; }
@@ -108,7 +108,7 @@ namespace Arta.Infrastructure
         internal ApiResult(bool isSuccessful, int httpStatusCode, string errorMessage, string errorCode = null)
         {
             IsSuccessful = isSuccessful;
-            ErrorDescription = errorMessage;
+            ErrorMessage = errorMessage;
             HttpStatusCode = httpStatusCode;
             ErrorCode = errorCode;
         }
@@ -170,7 +170,7 @@ namespace Arta.Infrastructure
 
         public static ApiResult Translate<TValue>(ApiResult<TValue> result)
         {
-            return new ApiResult(result.IsSuccessful, result.HttpStatusCode, result.ErrorDescription);
+            return new ApiResult(result.IsSuccessful, result.HttpStatusCode, result.ErrorMessage);
         }
     }
 }

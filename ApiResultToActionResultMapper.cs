@@ -11,9 +11,9 @@ namespace Arta.Infrastructure
                     { StatusCode = (int)result.HttpStatusCode }
 
                 : result.ErrorCode == null
-                    ? new ObjectResult(new Error { ErrorDescription = result.ErrorDescription })
+                    ? new ObjectResult(new Error { ErrorMessage = result.ErrorMessage })
                         { StatusCode = result.HttpStatusCode }
-                    : new ObjectResult(new ErrorWithErrorCode { ErrorDescription = result.ErrorDescription, ErrorCode = result.ErrorCode })
+                    : new ObjectResult(new ErrorWithErrorCode { ErrorMessage = result.ErrorMessage, ErrorCode = result.ErrorCode })
                         { StatusCode = result.HttpStatusCode };
         }
 
@@ -24,9 +24,9 @@ namespace Arta.Infrastructure
                     { StatusCode = (int)result.HttpStatusCode }
 
                 : result.ErrorCode == null
-                    ? new ObjectResult(new Error { ErrorDescription = result.ErrorDescription })
+                    ? new ObjectResult(new Error { ErrorMessage = result.ErrorMessage })
                         { StatusCode = (int)result.HttpStatusCode }
-                    : new ObjectResult(new ErrorWithErrorCode() { ErrorDescription = result.ErrorDescription, ErrorCode = result.ErrorCode })
+                    : new ObjectResult(new ErrorWithErrorCode() { ErrorMessage = result.ErrorMessage, ErrorCode = result.ErrorCode })
                         { StatusCode = (int)result.HttpStatusCode };
         }
     }

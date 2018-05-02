@@ -5,7 +5,7 @@ namespace Arta.Infrastructure.Validation
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorDescription { get; }
+        public string ErrorMessage { get; }
         public string ErrorCode { get; set; }
 
         public int HttpStatusCode { get; }
@@ -15,7 +15,7 @@ namespace Arta.Infrastructure.Validation
         {
             IsSuccessful = isSuccessful;
             ErrorCode = errorCode;
-            ErrorDescription = errorMessage;
+            ErrorMessage = errorMessage;
             HttpStatusCode = httpStatusCode;
         }
 

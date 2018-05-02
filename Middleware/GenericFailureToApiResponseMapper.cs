@@ -66,9 +66,9 @@ namespace Arta.Sessions.Api.ArtaInfra.Middleware
 
         private static readonly Dictionary<HttpStatusCode, ErrorWithErrorCode> StatusCodeMap = new Dictionary<HttpStatusCode, ErrorWithErrorCode>
         {
-            { HttpStatusCode.Unauthorized, new ErrorWithErrorCode{ErrorCode = "000001", ErrorDescription = "You have no access to this resource."} },
-            { HttpStatusCode.NotFound, new ErrorWithErrorCode{ErrorCode = "000002", ErrorDescription = "Resource not found."} },
-            { HttpStatusCode.InternalServerError, new ErrorWithErrorCode{ErrorCode = "000003", ErrorDescription = "Something went wrong. Please try again in a few minutes or contact your support team."} },
+            { HttpStatusCode.Unauthorized, new ErrorWithErrorCode{ErrorCode = "000001", ErrorMessage = "You have no access to this resource."} },
+            { HttpStatusCode.NotFound, new ErrorWithErrorCode{ErrorCode = "000002", ErrorMessage = "Resource not found."} },
+            { HttpStatusCode.InternalServerError, new ErrorWithErrorCode{ErrorCode = "000003", ErrorMessage = "Something went wrong. Please try again in a few minutes or contact your support team."} },
         };
 
         public static ErrorWithErrorCode Map(HttpStatusCode statusCode)

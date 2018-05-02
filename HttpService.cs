@@ -138,7 +138,7 @@ namespace Arta.Infrastructure
             var failedJson = JsonConvert.DeserializeObject<ErrorWithErrorCode>(result);
 
             return failedJson != null
-                ? HttpServiceResult<T>.Fail(failedJson.ErrorDescription, failedJson.ErrorCode, (int)response.StatusCode)
+                ? HttpServiceResult<T>.Fail(failedJson.ErrorMessage, failedJson.ErrorCode, (int)response.StatusCode)
                 : HttpServiceResult<T>.Fail($"Error occurred while performing post to {uri}: {response} - {result}", null, (int)response.StatusCode);
         }
 
@@ -155,7 +155,7 @@ namespace Arta.Infrastructure
             var failedJson = JsonConvert.DeserializeObject<ErrorWithErrorCode>(result);
 
             return failedJson != null
-                ? HttpServiceResult<T>.Fail(failedJson.ErrorDescription, failedJson.ErrorCode, (int)response.StatusCode)
+                ? HttpServiceResult<T>.Fail(failedJson.ErrorMessage, failedJson.ErrorCode, (int)response.StatusCode)
                 : HttpServiceResult<T>.Fail($"Error occurred while performing post to {uri}: {response} - {result}", null, (int)response.StatusCode);
         }
 
@@ -173,7 +173,7 @@ namespace Arta.Infrastructure
             var failedJson = JsonConvert.DeserializeObject<ErrorWithErrorCode>(result);
 
             return failedJson != null
-                ? HttpServiceResult<T>.Fail(failedJson.ErrorDescription, failedJson.ErrorCode, (int)response.StatusCode)
+                ? HttpServiceResult<T>.Fail(failedJson.ErrorMessage, failedJson.ErrorCode, (int)response.StatusCode)
                 : HttpServiceResult<T>.Fail($"Error occurred while performing post to {uri}: {response} - {result}", null, (int)response.StatusCode);
         }
 
@@ -202,7 +202,7 @@ namespace Arta.Infrastructure
             var failedJson = JsonConvert.DeserializeObject<ErrorWithErrorCode>(result);
 
             return failedJson != null
-                ? HttpServiceResult<T>.Fail(failedJson.ErrorDescription, failedJson.ErrorCode, (int)response.StatusCode)
+                ? HttpServiceResult<T>.Fail(failedJson.ErrorMessage, failedJson.ErrorCode, (int)response.StatusCode)
                 : HttpServiceResult<T>.Fail($"Error occurred while performing post to {uri}: {response} - {result}", null, (int)response.StatusCode);
         }
 
@@ -221,7 +221,7 @@ namespace Arta.Infrastructure
             var failedJson = JsonConvert.DeserializeObject<ErrorWithErrorCode>(resultSerialized);
 
             return failedJson != null
-                ? HttpServiceResult<TResponse>.Fail(failedJson.ErrorDescription, failedJson.ErrorCode, (int)response.StatusCode) 
+                ? HttpServiceResult<TResponse>.Fail(failedJson.ErrorMessage, failedJson.ErrorCode, (int)response.StatusCode) 
                 : HttpServiceResult<TResponse>.Fail($"Error occurred while performing put to {uri}: {response} - {resultSerialized}", null, (int)response.StatusCode);
         }
 
@@ -284,7 +284,7 @@ namespace Arta.Infrastructure
             var failedJson = JsonConvert.DeserializeObject<ErrorWithErrorCode>(resultSerialized);
 
             return failedJson != null
-                ? HttpServiceResult<TResponse>.Fail(failedJson.ErrorDescription, failedJson.ErrorCode, (int)response.StatusCode)
+                ? HttpServiceResult<TResponse>.Fail(failedJson.ErrorMessage, failedJson.ErrorCode, (int)response.StatusCode)
                 : HttpServiceResult<TResponse>.Fail($"Error occurred while performing patch to {uri}: {response} - {resultSerialized}", null, (int)response.StatusCode);
         }
     }
