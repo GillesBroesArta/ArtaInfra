@@ -6,17 +6,17 @@ namespace Arta.Infrastructure
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorMessage{ get; }
+        public string ErrorDescription{ get; }
 
         public int HttpStatusCode { get; }
         public TValue Value { get; }
         public string ErrorCode { get; }
 
-        internal ApiResult(TValue value, bool isSuccessful, int httpStatusCode, string errorMessage, string errorCode = null)
+        internal ApiResult(TValue value, bool isSuccessful, int httpStatusCode, string ErrorDescription, string errorCode = null)
         {
             Value = value;
             IsSuccessful = isSuccessful;
-            ErrorMessage = errorMessage;
+            ErrorDescription = ErrorDescription;
             HttpStatusCode = httpStatusCode;
             ErrorCode = errorCode;
         }
@@ -41,58 +41,58 @@ namespace Arta.Infrastructure
             return new ApiResult<TValue>(default(TValue), true, (int)System.Net.HttpStatusCode.NoContent, null);
         }
 
-        public static ApiResult<TValue> Forbidden(string errorMessage)
+        public static ApiResult<TValue> Forbidden(string ErrorDescription)
         {
-            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.Forbidden, errorMessage);
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.Forbidden, ErrorDescription);
         }
 
-        public static ApiResult<TValue> Unauthorized(string errorMessage)
+        public static ApiResult<TValue> Unauthorized(string ErrorDescription)
         {
-            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.Unauthorized, errorMessage);
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.Unauthorized, ErrorDescription);
         }
 
-        public static ApiResult<TValue> BadRequest(string errorMessage)
+        public static ApiResult<TValue> BadRequest(string ErrorDescription)
         {
-            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage);
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, ErrorDescription);
         }
 
-        public static ApiResult<TValue> ErrorDuringProcessing(string errorMessage)
+        public static ApiResult<TValue> ErrorDuringProcessing(string ErrorDescription)
         {
-            return new ApiResult<TValue>(default(TValue), false, 461, errorMessage);
+            return new ApiResult<TValue>(default(TValue), false, 461, ErrorDescription);
         }
 
-        public static ApiResult<TValue> BadRequest(string errorMessage, string errorCode = null)
+        public static ApiResult<TValue> BadRequest(string ErrorDescription, string errorCode = null)
         {
-            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage, errorCode);
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.BadRequest, ErrorDescription, errorCode);
         }
-        public static ApiResult<TValue> NotFound(string errorMessage, string errorCode = null)
+        public static ApiResult<TValue> NotFound(string ErrorDescription, string errorCode = null)
         {
-            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.NotFound, errorMessage, errorCode);
-        }
-
-        public static ApiResult<TValue> InternalServerError(string errorMessage)
-        {
-            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.InternalServerError, errorMessage);
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.NotFound, ErrorDescription, errorCode);
         }
 
-        public static ApiResult<TValue> NotAcceptable(string errorMessage)
+        public static ApiResult<TValue> InternalServerError(string ErrorDescription)
         {
-            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.NotAcceptable, errorMessage);
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.InternalServerError, ErrorDescription);
         }
 
-        public static ApiResult<TValue> ValidationError(string errorMessage, string errorCode = null)
+        public static ApiResult<TValue> NotAcceptable(string ErrorDescription)
         {
-            return new ApiResult<TValue>(default(TValue), false, 460, errorMessage, errorCode);
+            return new ApiResult<TValue>(default(TValue), false, (int)System.Net.HttpStatusCode.NotAcceptable, ErrorDescription);
         }
 
-        public static ApiResult<TValue> Fail(int httpStatusCode, string errorMessage, string errorCode = null, TValue result = default(TValue))
+        public static ApiResult<TValue> ValidationError(string ErrorDescription, string errorCode = null)
         {
-            return new ApiResult<TValue>(result, false, httpStatusCode, errorMessage, errorCode);
+            return new ApiResult<TValue>(default(TValue), false, 460, ErrorDescription, errorCode);
+        }
+
+        public static ApiResult<TValue> Fail(int httpStatusCode, string ErrorDescription, string errorCode = null, TValue result = default(TValue))
+        {
+            return new ApiResult<TValue>(result, false, httpStatusCode, ErrorDescription, errorCode);
         }
 
         public static ApiResult<TValue> Translate(ApiResult result, TValue value)
         {
-            return new ApiResult<TValue>(value, result.IsSuccessful, result.HttpStatusCode, result.ErrorMessage);
+            return new ApiResult<TValue>(value, result.IsSuccessful, result.HttpStatusCode, result.ErrorDescription);
         }
     }
 
@@ -100,15 +100,15 @@ namespace Arta.Infrastructure
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorMessage { get; }
+        public string ErrorDescription { get; }
 
         public int HttpStatusCode { get; }
         public string ErrorCode { get; }
 
-        internal ApiResult(bool isSuccessful, int httpStatusCode, string errorMessage, string errorCode = null)
+        internal ApiResult(bool isSuccessful, int httpStatusCode, string ErrorDescription, string errorCode = null)
         {
             IsSuccessful = isSuccessful;
-            ErrorMessage = errorMessage;
+            ErrorDescription = ErrorDescription;
             HttpStatusCode = httpStatusCode;
             ErrorCode = errorCode;
         }
@@ -133,44 +133,44 @@ namespace Arta.Infrastructure
             return new ApiResult(true, (int)System.Net.HttpStatusCode.NoContent, null);
         }
 
-        public static ApiResult Forbidden(string errorMessage)
+        public static ApiResult Forbidden(string ErrorDescription)
         {
-            return new ApiResult(false, (int)System.Net.HttpStatusCode.Forbidden, errorMessage);
+            return new ApiResult(false, (int)System.Net.HttpStatusCode.Forbidden, ErrorDescription);
         }
 
-        public static ApiResult Unauthorized(string errorMessage)
+        public static ApiResult Unauthorized(string ErrorDescription)
         {
-            return new ApiResult(false, (int)System.Net.HttpStatusCode.Unauthorized, errorMessage);
+            return new ApiResult(false, (int)System.Net.HttpStatusCode.Unauthorized, ErrorDescription);
         }
 
-        public static ApiResult BadRequest(string errorMessage)
+        public static ApiResult BadRequest(string ErrorDescription)
         {
-            return new ApiResult(false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage);
+            return new ApiResult(false, (int)System.Net.HttpStatusCode.BadRequest, ErrorDescription);
         }
 
-        public static ApiResult NotFound(string errorMessage, string errorCode = null)
+        public static ApiResult NotFound(string ErrorDescription, string errorCode = null)
         {
-            return new ApiResult(false, (int)System.Net.HttpStatusCode.NotFound, errorMessage, errorCode);
+            return new ApiResult(false, (int)System.Net.HttpStatusCode.NotFound, ErrorDescription, errorCode);
         }
 
-        public static ApiResult InternalServerError(string errorMessage)
+        public static ApiResult InternalServerError(string ErrorDescription)
         {
-            return new ApiResult(false, (int)System.Net.HttpStatusCode.InternalServerError, errorMessage);
+            return new ApiResult(false, (int)System.Net.HttpStatusCode.InternalServerError, ErrorDescription);
         }
 
-        public static ApiResult Fail(int httpStatusCode, string errorMessage, string errorCode = null)
+        public static ApiResult Fail(int httpStatusCode, string ErrorDescription, string errorCode = null)
         {
-            return new ApiResult(false, httpStatusCode, errorMessage, errorCode);
+            return new ApiResult(false, httpStatusCode, ErrorDescription, errorCode);
         }
 
-        public static ApiResult ValidationError(string errorMessage, string errorCode = null)
+        public static ApiResult ValidationError(string ErrorDescription, string errorCode = null)
         {
-            return new ApiResult(false, 460, errorMessage, errorCode);
+            return new ApiResult(false, 460, ErrorDescription, errorCode);
         }
 
         public static ApiResult Translate<TValue>(ApiResult<TValue> result)
         {
-            return new ApiResult(result.IsSuccessful, result.HttpStatusCode, result.ErrorMessage);
+            return new ApiResult(result.IsSuccessful, result.HttpStatusCode, result.ErrorDescription);
         }
     }
 }

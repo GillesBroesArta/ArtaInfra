@@ -23,7 +23,7 @@ namespace Arta.Infrastructure.Validation
                     var result = await validator.InternalValidate(request);
 
                     if (result.IsFailure)
-                        return ApiResult<TResponse>.Fail(result.HttpStatusCode, result.ErrorMessage, result.ErrorCode);
+                        return ApiResult<TResponse>.Fail(result.HttpStatusCode, result.ErrorDescription, result.ErrorCode);
                 }
             }
 

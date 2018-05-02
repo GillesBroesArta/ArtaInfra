@@ -5,17 +5,17 @@ namespace Arta.Infrastructure.Validation
     {
         public bool IsSuccessful { get; }
         public bool IsFailure => !IsSuccessful;
-        public string ErrorMessage { get; }
+        public string ErrorDescription { get; }
         public string ErrorCode { get; set; }
 
         public int HttpStatusCode { get; }
         public string Error;
 
-        internal ValidationResult(bool isSuccessful, int httpStatusCode, string errorMessage, string errorCode)
+        internal ValidationResult(bool isSuccessful, int httpStatusCode, string ErrorDescription, string errorCode)
         {
             IsSuccessful = isSuccessful;
             ErrorCode = errorCode;
-            ErrorMessage = errorMessage;
+            ErrorDescription = ErrorDescription;
             HttpStatusCode = httpStatusCode;
         }
 
@@ -24,39 +24,39 @@ namespace Arta.Infrastructure.Validation
             return new ValidationResult(true, (int)System.Net.HttpStatusCode.OK, null, null);
         }
 
-        public static ValidationResult Forbidden(string errorMessage, string errorCode = null)
+        public static ValidationResult Forbidden(string ErrorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.Forbidden, errorMessage, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.Forbidden, ErrorDescription, errorCode);
         }
 
-        public static ValidationResult Unauthorized(string errorMessage, string errorCode = null)
+        public static ValidationResult Unauthorized(string ErrorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.Unauthorized, errorMessage, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.Unauthorized, ErrorDescription, errorCode);
         }
 
-        public static ValidationResult BadRequest(string errorMessage, string errorCode = null)
+        public static ValidationResult BadRequest(string ErrorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.BadRequest, errorMessage, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.BadRequest, ErrorDescription, errorCode);
         }
 
-        public static ValidationResult NotFound(string errorMessage, string errorCode = null)
+        public static ValidationResult NotFound(string ErrorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.NotFound, errorMessage, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.NotFound, ErrorDescription, errorCode);
         }
 
-        public static ValidationResult InternalServerError(string errorMessage, string errorCode = null)
+        public static ValidationResult InternalServerError(string ErrorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.InternalServerError, errorMessage, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.InternalServerError, ErrorDescription, errorCode);
         }
 
-        public static ValidationResult NotAcceptable(string errorMessage, string errorCode = null)
+        public static ValidationResult NotAcceptable(string ErrorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.NotAcceptable, errorMessage, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.NotAcceptable, ErrorDescription, errorCode);
         }
 
-        public static ValidationResult ValidationError(string errorMessage, string errorCode = null)
+        public static ValidationResult ValidationError(string ErrorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, 460, errorMessage, errorCode);
+            return new ValidationResult(false, 460, ErrorDescription, errorCode);
         }
 
     }
