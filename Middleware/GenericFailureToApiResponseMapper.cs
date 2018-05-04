@@ -30,8 +30,15 @@ namespace Arta.Sessions.Api.ArtaInfra.Middleware
                 //set the current response to the memorystream.
                 context.Response.Body = memoryStream;
 
-                await _next(context);
-
+                try
+                {
+                    await _next(context);
+                }
+                catch (Exception e)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                }
+                
                 //reset the body 
                 context.Response.Body = currentBody;
                 memoryStream.Seek(0, SeekOrigin.Begin);
