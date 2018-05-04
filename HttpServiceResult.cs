@@ -9,11 +9,11 @@
         public string ErrorCode { get; }
         public int HttpStatusCode { get; }
 
-        internal HttpServiceResult(TValue value, bool isSuccessful, string ErrorDescription, string errorCode, int httpStatusCode)
+        internal HttpServiceResult(TValue value, bool isSuccessful, string errorDescription, string errorCode, int httpStatusCode)
         {
             Value = value;
             IsSuccessful = isSuccessful;
-            ErrorDescription = ErrorDescription;
+            ErrorDescription = errorDescription;
             ErrorCode = errorCode;
             HttpStatusCode = httpStatusCode;
         }
@@ -23,9 +23,9 @@
             return new HttpServiceResult<TValue>(value, true, null, null, httpStatusCode);
         }
 
-        public static HttpServiceResult<TValue> Fail(string ErrorDescription, string errorCode, int httpStatusCode)
+        public static HttpServiceResult<TValue> Fail(string errorDescription, string errorCode, int httpStatusCode)
         {
-            return new HttpServiceResult<TValue>(default(TValue), false, ErrorDescription, errorCode, httpStatusCode);
+            return new HttpServiceResult<TValue>(default(TValue), false, errorDescription, errorCode, httpStatusCode);
         }
     }
 
@@ -37,10 +37,10 @@
         public string ErrorCode { get; }
         public int HttpStatusCode { get; }
 
-        internal HttpServiceResult(bool isSuccessful, string ErrorDescription, string errorCode, int httpStatusCode)
+        internal HttpServiceResult(bool isSuccessful, string errorDescription, string errorCode, int httpStatusCode)
         {
             IsSuccessful = isSuccessful;
-            ErrorDescription = ErrorDescription;
+            ErrorDescription = errorDescription;
             ErrorCode = errorCode;
             HttpStatusCode = httpStatusCode;
         }
@@ -51,9 +51,9 @@
 
         }
 
-        public static HttpServiceResult Fail(string ErrorDescription, string errorCode, int httpStatusCode)
+        public static HttpServiceResult Fail(string errorDescription, string errorCode, int httpStatusCode)
         {
-            return new HttpServiceResult(false, ErrorDescription, errorCode, httpStatusCode);
+            return new HttpServiceResult(false, errorDescription, errorCode, httpStatusCode);
         }
     }
 }

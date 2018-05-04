@@ -11,11 +11,11 @@ namespace Arta.Infrastructure.Validation
         public int HttpStatusCode { get; }
         public string Error;
 
-        internal ValidationResult(bool isSuccessful, int httpStatusCode, string ErrorDescription, string errorCode)
+        internal ValidationResult(bool isSuccessful, int httpStatusCode, string errorDescription, string errorCode)
         {
             IsSuccessful = isSuccessful;
             ErrorCode = errorCode;
-            ErrorDescription = ErrorDescription;
+            ErrorDescription = errorDescription;
             HttpStatusCode = httpStatusCode;
         }
 
@@ -24,39 +24,39 @@ namespace Arta.Infrastructure.Validation
             return new ValidationResult(true, (int)System.Net.HttpStatusCode.OK, null, null);
         }
 
-        public static ValidationResult Forbidden(string ErrorDescription, string errorCode = null)
+        public static ValidationResult Forbidden(string errorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.Forbidden, ErrorDescription, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.Forbidden, errorDescription, errorCode);
         }
 
-        public static ValidationResult Unauthorized(string ErrorDescription, string errorCode = null)
+        public static ValidationResult Unauthorized(string errorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.Unauthorized, ErrorDescription, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.Unauthorized, errorDescription, errorCode);
         }
 
-        public static ValidationResult BadRequest(string ErrorDescription, string errorCode = null)
+        public static ValidationResult BadRequest(string errorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.BadRequest, ErrorDescription, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.BadRequest, errorDescription, errorCode);
         }
 
-        public static ValidationResult NotFound(string ErrorDescription, string errorCode = null)
+        public static ValidationResult NotFound(string errorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.NotFound, ErrorDescription, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.NotFound, errorDescription, errorCode);
         }
 
-        public static ValidationResult InternalServerError(string ErrorDescription, string errorCode = null)
+        public static ValidationResult InternalServerError(string errorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.InternalServerError, ErrorDescription, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.InternalServerError, errorDescription, errorCode);
         }
 
-        public static ValidationResult NotAcceptable(string ErrorDescription, string errorCode = null)
+        public static ValidationResult NotAcceptable(string errorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, (int)System.Net.HttpStatusCode.NotAcceptable, ErrorDescription, errorCode);
+            return new ValidationResult(false, (int)System.Net.HttpStatusCode.NotAcceptable, errorDescription, errorCode);
         }
 
-        public static ValidationResult ValidationError(string ErrorDescription, string errorCode = null)
+        public static ValidationResult ValidationError(string errorDescription, string errorCode = null)
         {
-            return new ValidationResult(false, 460, ErrorDescription, errorCode);
+            return new ValidationResult(false, 460, errorDescription, errorCode);
         }
 
     }
