@@ -12,11 +12,11 @@ namespace Arta.Infrastructure
         public TValue Value { get; }
         public string ErrorCode { get; }
 
-        internal ApiResult(TValue value, bool isSuccessful, int httpStatusCode, string ErrorDescription, string errorCode = null)
+        internal ApiResult(TValue value, bool isSuccessful, int httpStatusCode, string errorDescription, string errorCode = null)
         {
             Value = value;
             IsSuccessful = isSuccessful;
-            ErrorDescription = ErrorDescription;
+            ErrorDescription = errorDescription;
             HttpStatusCode = httpStatusCode;
             ErrorCode = errorCode;
         }
@@ -105,10 +105,10 @@ namespace Arta.Infrastructure
         public int HttpStatusCode { get; }
         public string ErrorCode { get; }
 
-        internal ApiResult(bool isSuccessful, int httpStatusCode, string ErrorDescription, string errorCode = null)
+        internal ApiResult(bool isSuccessful, int httpStatusCode, string errorDescription, string errorCode = null)
         {
             IsSuccessful = isSuccessful;
-            ErrorDescription = ErrorDescription;
+            ErrorDescription = errorDescription;
             HttpStatusCode = httpStatusCode;
             ErrorCode = errorCode;
         }
