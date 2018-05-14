@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Arta.Infrastructure;
+using Arta.Infrastructure.Logging;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
@@ -21,7 +22,7 @@ namespace Arta.Sessions.Api.ArtaInfra.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IApiLogger logger)
         {
             var currentBody = context.Response.Body;
 
@@ -36,6 +37,7 @@ namespace Arta.Sessions.Api.ArtaInfra.Middleware
                 }
                 catch (Exception e)
                 {
+                    logger.LogException(e);
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
                 
