@@ -11,7 +11,7 @@ namespace ArtaInfra.Utils.Helpers
     public static class AuthorizationHelper
     {   
         private static bool hasClaimWithValue(HttpContextAccessor httpContextAccessor, string type, string value) {
-            return httpContextAccessor.HttpContext.User.Claims.Any(c => c.Type == type && c.Value == value);
+            return httpContextAccessor.HttpContext.User.Claims.Any(c => c.Type == type && c.Value.Equals(value, StringComparison.InvariantCultureIgnoreCase));
         }
         public static bool isCspAdmin(HttpContextAccessor httpContextAccessor, string csp)
         {
