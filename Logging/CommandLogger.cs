@@ -1,4 +1,6 @@
 using System;
+using Arta.Subscriptions.Activate.Events.ArtaInfra.Logging;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -7,24 +9,39 @@ namespace Arta.Infrastructure.Logging
 {
     public class CommandLogger : ICommandLogger
     {
-        private readonly ILogger<CommandLogger> _logger;
 
-        public CommandLogger(ILogger<CommandLogger> logger)
+        private readonly IBus _bus;
+
+        public CommandLogger(IBus bus)
         {
-            _logger = logger;
+            _bus = bus;
         }
 
-        public void LogCommand(string category, string user, string uid, string description, string updatedValue, string originalValue)
-        {            
-            Log("Command", new {  category, user, description, updatedValue, originalValue });
+        public void LogCommand(string account, TableType tableType, string tableKey, string command, string value = null, string changed = null)
+        {
+            LogCommand(null, account, tableType, tableKey, command, value, changed);
         }
 
-        private void Log<T>(string category, T contents)
+        public void LogCommand(string partner, string account, TableType tableType, string tableKey, string command, string value = null, string changed = null)
         {
-            var settings = new JsonSerializerSettings();
-            settings.NullValueHandling = NullValueHandling.Ignore;
-            var logging = $"[{category}] {JsonConvert.SerializeObject(contents, settings)}";
-            _logger.LogInformation(logging);
+            LogCommand(partner, DateTime.Now, AccountType.WebUser, account, tableType, tableKey, command, value, changed);
+        }
+
+        public void LogCommand(string partner, DateTime datetime, AccountType accountType, string account, TableType tableType, string tableKey, string command, string value = null, string changed = null)
+        {
+            _bus.Publish(
+                new CommandLogEvent
+                {
+                    Partner = partner,
+                    DateTime = datetime,
+                    AccountType = accountType,
+                    Account = account,
+                    TableType = tableType,
+                    TableKey = tableKey,
+                    Command = command,
+                    Value = value,
+                    Changed = changed
+                });
         }
     }
 }
