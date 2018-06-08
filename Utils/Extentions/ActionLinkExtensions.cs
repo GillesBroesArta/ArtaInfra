@@ -51,14 +51,15 @@ namespace ArtaInfra.Utils.Extensions
 
         public static string GetFullLink(IHttpContextAccessor httpContextAccessor, string partner, string reference)
         {
-            var partnerRef = string.IsNullOrEmpty(partner) ? "" : $"partners/{partner}";
-            return $"{GetBaseLink(httpContextAccessor)}/{partnerRef}/{reference}";
+            var partnerRef = string.IsNullOrEmpty(partner) ? "" : $"/partners/{partner}";
+            return $"{GetBaseLink(httpContextAccessor)}{partnerRef}/{reference}";
         }
+
 
         public static string GetFullCspLink(IHttpContextAccessor httpContextAccessor, string csp, string reference)
         {
-            var cspRef = string.IsNullOrEmpty(csp) ? "" : $"csps/{csp}";
-            return $"{GetBaseLink(httpContextAccessor)}/{cspRef}/{reference}";
+            var cspRef = string.IsNullOrEmpty(csp) ? "" : $"/csps/{csp}";
+            return $"{GetBaseLink(httpContextAccessor)}{cspRef}/{reference}";
         }
 
         public static Dictionary<string, string> AddLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, string partner, string reference)
