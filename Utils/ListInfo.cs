@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Arta.Subscriptions.Api.ArtaInfra.Utils.Helpers;
+using Newtonsoft.Json;
 
 namespace ArtaInfra.Utils
 {
@@ -6,6 +8,8 @@ namespace ArtaInfra.Utils
     {
         public int Size { get; set; } = 0;
         public int Count { get; set; } = 0;
+
+        [JsonConverter(typeof(BooleanYesNoConverter))]
         public bool HasMore { get; set; } = false;
     }
 
