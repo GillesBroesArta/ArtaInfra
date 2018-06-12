@@ -105,10 +105,28 @@ namespace ArtaInfra.Utils.Pagination
             if (count == 0)
                 return new PaginatedList<T, U>(new List<T>(), 0, 0, 0);
 
-            List<T> items = new List<T>();
+            var items = new List<T>();
             if (limit > 0 && offset < count)
                 items = await source.Skip(offset).Take(limit).ToListAsync();
             return new PaginatedList<T, U>(items, count, offset, limit);
+        }
+
+
+
+        public static PaginatedList<T, U> UseList(IHttpContextAccessor httpContextAccessor, IList<T> source, int offset, int limit, int totalCount)
+        {
+            _httpContextAccessor = httpContextAccessor;
+
+            //Use defaults value according to generic specs 
+            if (limit < 0)
+                limit = 100;
+
+            var count = source.Count;
+            if (count == 0)
+                return new PaginatedList<T, U>(new List<T>(), 0, 0, 0);
+
+            var items = source.ToList();
+            return new PaginatedList<T, U>(items, totalCount, offset, limit);
         }
     }
 }
