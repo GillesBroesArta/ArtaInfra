@@ -12,10 +12,10 @@ namespace Arta.Infrastructure.Logging
 
         private readonly IBus _bus;
 
-        public CommandLogger(IBus bus)
-        {
-            _bus = bus;
-        }
+        //public CommandLogger(IBus bus)
+        //{
+        //    _bus = bus;
+        //}
 
         public void LogCommand(string account, TableType tableType, string tableKey, string command, string value = null, string changed = null)
         {
@@ -29,19 +29,19 @@ namespace Arta.Infrastructure.Logging
 
         public void LogCommand(string partner, DateTime datetime, AccountType accountType, string account, TableType tableType, string tableKey, string command, string value = null, string changed = null)
         {
-            _bus.Publish(
-                new CommandLogEvent
-                {
-                    Partner = partner,
-                    DateTime = datetime,
-                    AccountType = accountType,
-                    Account = account,
-                    TableType = tableType,
-                    TableKey = tableKey,
-                    Command = command,
-                    Value = value,
-                    Changed = changed
-                });
+            //_bus.Publish(
+            //    new CommandLogEvent
+            //    {
+            //        Partner = partner,
+            //        DateTime = datetime,
+            //        AccountType = accountType,
+            //        Account = account,
+            //        TableType = tableType,
+            //        TableKey = tableKey,
+            //        Command = command,
+            //        Value = value,
+            //        Changed = changed
+            //    });
         }
     }
 }
