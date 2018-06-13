@@ -125,7 +125,8 @@ namespace Arta.Subscriptions.Activate.Events.ArtaInfra.Logging
         CreditThreshold = 119,
         SumPlan = 120,
         EventManagement = 121,
-        BundleGrantedEndUser = 122
+        BundleGrantedEndUser = 122,
+        IotProductPlan = 123
     }
     public enum AccountType
     {
