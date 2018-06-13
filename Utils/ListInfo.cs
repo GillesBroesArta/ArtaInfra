@@ -8,9 +8,7 @@ namespace ArtaInfra.Utils
     {
         public int Size { get; set; } = 0;
         public int Count { get; set; } = 0;
-
-        [JsonConverter(typeof(BooleanYesNoConverter))]
-        public bool HasMore { get; set; } = false;
+        public string HasMore { get; set; } = "No";
     }
 
     public class ActionLinks
