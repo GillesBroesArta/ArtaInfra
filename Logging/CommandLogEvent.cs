@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Arta.Subscriptions.Activate.Events.ArtaInfra.Logging
+namespace Arta.Infrastructure.Logging
 {
     //TableType and AccountType enums are taken from ResellerCore utilities
     public enum TableType
@@ -127,6 +127,7 @@ namespace Arta.Subscriptions.Activate.Events.ArtaInfra.Logging
         EventManagement = 121,
         BundleGrantedEndUser = 122
     }
+
     public enum AccountType
     {
         All = -1,
@@ -138,9 +139,18 @@ namespace Arta.Subscriptions.Activate.Events.ArtaInfra.Logging
         WebUser = 5,
         System = 100
     }
+
+    public enum DbType
+    {
+        Central,
+        Csp,
+        Partner
+    }
+
     public class CommandLogEvent
     {
-        public string Partner { get; set; }
+        public DbType DbType { get; set; }
+        public string CspOrPartner { get; set; }
         public DateTime DateTime { get; set; }
         public AccountType AccountType { get; set; }
         public string Account { get; set; }
