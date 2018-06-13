@@ -53,7 +53,7 @@ namespace ArtaInfra.Utils.Pagination
             ListInfo = new ListInfo
             {
                 Size = Count,
-                HasMore = Count < Total,
+                HasMore = Count < Total ? "Yes" : "No",
                 Count = Total
             };
             ListInfo.Links.AddSelfLink(_httpContextAccessor);
