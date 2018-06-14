@@ -78,6 +78,7 @@ namespace ArtaInfra.Utils.Extensions
 
         public static Dictionary<string, string> AddPagingLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, int offset, int limit)
         {
+            linkName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(linkName); 
             if (links == null ) links = new Dictionary<string, string>();
             var link = GetSelfLink(httpContextAccessor);
 
