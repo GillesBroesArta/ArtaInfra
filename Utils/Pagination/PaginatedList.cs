@@ -129,7 +129,7 @@ namespace ArtaInfra.Utils.Pagination
                 limit = 100;
 
             var count = source.Count;
-            if (count == 0)
+            if (count == 0 && totalCount == 0)
                 return new PaginatedList<T, U>(new List<T>(), 0, 0, 0);
 
             var items = source.ToList();
