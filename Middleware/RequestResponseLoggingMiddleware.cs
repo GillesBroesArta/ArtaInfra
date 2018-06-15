@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Arta.Infrastructure.Logging;
 using Arta.Sessions.Api.ArtaInfra.Middleware;
+using Microsoft.AspNetCore.Authentication.Twitter;
 using Newtonsoft.Json;
 
 namespace Arta.Infrastructure.Middleware
@@ -54,6 +55,9 @@ namespace Arta.Infrastructure.Middleware
                 Client = context.Connection.RemoteIpAddress.ToString()
             };
 
+            requestBodyStream.Seek(0, SeekOrigin.Begin);
+            request.Body = requestBodyStream;
+
             return requestLog;
         }
 
@@ -63,8 +67,6 @@ namespace Arta.Infrastructure.Middleware
             var responseBody = new StreamReader(responseBodyStream).ReadToEnd();
 
             responseBody = Regex.Replace(responseBody, @"^\s*$\n", string.Empty, RegexOptions.Multiline).TrimEnd();
-
-            var body = responseBody.IsValidJson() ? JsonConvert.DeserializeObject(responseBody) : responseBody;
 
             var responseLog = new Response
             {
