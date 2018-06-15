@@ -64,6 +64,7 @@ namespace ArtaInfra.Utils.Extensions
 
         public static Dictionary<string, string> AddLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, string partner, string reference)
         {
+            linkName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(linkName);
             if (links == null ) links = new Dictionary<string, string>();
             links.Add($"{linkName}", GetFullLink(httpContextAccessor, partner, reference));
             return links;
@@ -71,6 +72,7 @@ namespace ArtaInfra.Utils.Extensions
 
         public static Dictionary<string, string> AddCspLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor, string linkName, string csp, string reference)
         {
+            linkName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(linkName);
             if (links == null) links = new Dictionary<string, string>();
             links.Add($"{linkName}", GetFullCspLink(httpContextAccessor, csp, reference));
             return links;

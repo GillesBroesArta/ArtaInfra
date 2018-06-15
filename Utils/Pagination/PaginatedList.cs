@@ -59,22 +59,22 @@ namespace ArtaInfra.Utils.Pagination
             ListInfo.Links.AddSelfLink(_httpContextAccessor);
             if (Total == 0 || Total <= Limit || Limit == 0) 
             {
-                ListInfo.Links.Add("first", null);
-                ListInfo.Links.Add("previous", null);
-                ListInfo.Links.Add("next", null);
-                ListInfo.Links.Add("last", null);
+                ListInfo.Links.Add("First", null);
+                ListInfo.Links.Add("Previous", null);
+                ListInfo.Links.Add("Next", null);
+                ListInfo.Links.Add("Last", null);
                 return; //Early out when no paging is possible
             }
 
-            ListInfo.Links.AddPagingLink(_httpContextAccessor, "first", 0, Limit);
+            ListInfo.Links.AddPagingLink(_httpContextAccessor, "First", 0, Limit);
             var previous = Offset - Limit > 0 ? Offset - Limit : 0;
-            if (Offset > 0) ListInfo.Links.AddPagingLink(_httpContextAccessor, "previous", previous, Limit);
-            else ListInfo.Links.Add("previous", null);
+            if (Offset > 0) ListInfo.Links.AddPagingLink(_httpContextAccessor, "Previous", previous, Limit);
+            else ListInfo.Links.Add("Previous", null);
             var next = Offset + Limit;
             if (next >= Total) next = Offset;
-            ListInfo.Links.AddPagingLink(_httpContextAccessor, "next", next, Limit);
+            ListInfo.Links.AddPagingLink(_httpContextAccessor, "Next", next, Limit);
             var last = Total / Limit * Limit;
-            ListInfo.Links.AddPagingLink(_httpContextAccessor, "last", last, Limit);
+            ListInfo.Links.AddPagingLink(_httpContextAccessor, "Last", last, Limit);
         }
 
         /// <summary>
