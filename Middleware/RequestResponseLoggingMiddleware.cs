@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Arta.Infrastructure.Logging;
+using Arta.Sessions.Api.ArtaInfra.Middleware;
+using Newtonsoft.Json;
 
 namespace Arta.Infrastructure.Middleware
 {
@@ -30,7 +33,7 @@ namespace Arta.Infrastructure.Middleware
             logger.LogInformation(await GetResponseLogging(context.Response, context.Request.Path, responseBodyStream, bodyStream), LoggingType.Response);
         }
 
-        public async Task<string> GetRequestLogging(HttpContext context)
+        public async Task<Request> GetRequestLogging(HttpContext context)
         {
             var request = context.Request;
             var requestBodyStream = new MemoryStream();
@@ -40,32 +43,34 @@ namespace Arta.Infrastructure.Middleware
 
             var requestBodyText = await new StreamReader(requestBodyStream).ReadToEndAsync();
 
-            var requestLog = $"Method: {request.Method}, Url: {request.Path}{request.QueryString}";
-            if (!string.IsNullOrWhiteSpace(requestBodyText))
-                requestLog += $", Body: {requestBodyText}";
+            requestBodyText = Regex.Replace(requestBodyText, @"^\s*$\n", string.Empty, RegexOptions.Multiline).TrimEnd();
 
-            requestLog += $", Client: {context.Connection.RemoteIpAddress}";
-
-            requestBodyStream.Seek(0, SeekOrigin.Begin);
-            request.Body = requestBodyStream;
+   
+            var requestLog = new Request
+            {
+                Method = request.Method,
+                Url = $"{request.Path}{request.QueryString}",
+                Body = requestBodyText,
+                Client = context.Connection.RemoteIpAddress.ToString()
+            };
 
             return requestLog;
         }
 
-        public async Task<string> GetResponseLogging(HttpResponse response, string path, MemoryStream responseBodyStream, Stream bodyStream)
+        public async Task<Response> GetResponseLogging(HttpResponse response, string path, MemoryStream responseBodyStream, Stream bodyStream)
         {
             responseBodyStream.Seek(0, SeekOrigin.Begin);
             var responseBody = new StreamReader(responseBodyStream).ReadToEnd();
 
-            var responseLog = $"Code: {response.StatusCode}";
-            if (!string.IsNullOrWhiteSpace(responseBody))
+            responseBody = Regex.Replace(responseBody, @"^\s*$\n", string.Empty, RegexOptions.Multiline).TrimEnd();
+
+            var body = responseBody.IsValidJson() ? JsonConvert.DeserializeObject(responseBody) : responseBody;
+
+            var responseLog = new Response
             {
-                responseLog += ", Body: ";
-                if (!IsBodyIgnoredFromResponseLogging(path))
-                    responseLog += $"{ responseBody }";
-                else
-                    responseLog += "Ignored";
-            }
+                Code = response.StatusCode.ToString(),
+                Body = !IsBodyIgnoredFromResponseLogging(path) ? responseBody : "Ignored"
+            };
 
             responseBodyStream.Seek(0, SeekOrigin.Begin);
 

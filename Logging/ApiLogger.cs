@@ -9,38 +9,40 @@ namespace Arta.Infrastructure.Logging
     {
         private readonly ILogger<ApiLogger> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly JsonSerializerSettings _settings;
 
         public ApiLogger(ILogger<ApiLogger> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _settings = new JsonSerializerSettings();
+            _settings.NullValueHandling = NullValueHandling.Ignore;
         }
 
-        public void LogInformation(string message, LoggingType? loggingType = null) 
+        public void LogInformation<T>(T message, LoggingType? loggingType = null) 
         {
-            Log("ApiInformation", new { message, loggingType = loggingType != null ? loggingType.ToString() : null, traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier});
+            Log(new { message, loggingType = loggingType != null ? loggingType.ToString() : null, traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier});
         }
 
         public void LogException(Exception ex)
         {
-            LogException(null, ex);
+            _logger.LogCritical(ex.ToString());
         }
 
         public void LogException(string message, Exception ex)
         {
-            Log("ApiError", new { message, exception = ex.ToString(),  traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier });
+            var logging = new { message, exception = ex.ToString(), traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier };
+            _logger.LogCritical($"{JsonConvert.SerializeObject(logging, _settings)}");
         }
         
         public void LogError(string error)
         {
-            Log("ApiError", new { error,  traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier });
+            _logger.LogError(new { error, traceIdentifier = _httpContextAccessor.HttpContext.TraceIdentifier }.ToString());
         }
 
-        private void Log<T>(string category, T contents)
+        private void Log<T>(T contents)
         {
-            var settings = new JsonSerializerSettings();
-            settings.NullValueHandling = NullValueHandling.Ignore;
-            var logging = $"[{category}] {JsonConvert.SerializeObject(contents, settings)}";
+            var logging = $"{JsonConvert.SerializeObject(contents, _settings)}";
             _logger.LogInformation(logging);
         }
     }
