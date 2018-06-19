@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Arta.Infrastructure;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Primitives;
 
 namespace ArtaInfra.Utils.Extensions
@@ -64,7 +63,7 @@ namespace ArtaInfra.Utils.Extensions
 
         public static Dictionary<string, string> AddLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, string partner, string reference)
         {
-            linkName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(linkName);
+            linkName = ToFirstCapitalCase(linkName);
             if (links == null ) links = new Dictionary<string, string>();
             links.Add($"{linkName}", GetFullLink(httpContextAccessor, partner, reference));
             return links;
@@ -72,7 +71,7 @@ namespace ArtaInfra.Utils.Extensions
 
         public static Dictionary<string, string> AddCspLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor, string linkName, string csp, string reference)
         {
-            linkName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(linkName);
+            linkName = ToFirstCapitalCase(linkName);
             if (links == null) links = new Dictionary<string, string>();
             links.Add($"{linkName}", GetFullCspLink(httpContextAccessor, csp, reference));
             return links;
@@ -80,7 +79,7 @@ namespace ArtaInfra.Utils.Extensions
 
         public static Dictionary<string, string> AddPagingLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, int offset, int limit)
         {
-            linkName = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(linkName); 
+            linkName = ToFirstCapitalCase(linkName); 
             if (links == null ) links = new Dictionary<string, string>();
             var link = GetSelfLink(httpContextAccessor);
 
@@ -106,5 +105,16 @@ namespace ArtaInfra.Utils.Extensions
             links.Add($"{linkName}", $"{link}");
             return links;
         }
-    }        
+
+        private static string ToFirstCapitalCase(string input)
+        {
+            var converted = input;
+            if (!string.IsNullOrEmpty(input))
+            {
+                converted = char.ToUpper(input[0]) + input.Substring(1);
+            }
+            return converted;
+        }
+
+    }
 }
