@@ -43,5 +43,24 @@ namespace ArtaInfra.Utils.Extensions
 
             return sql;
         }
+
+        //Does not work
+        //public static bool SqlLike(this DbFunctions _, string matchExpression, string pattern)
+        //{
+        //    return EF.Functions.Like(matchExpression, $@"%{ReplaceSqlWildcards(pattern)}%");
+        //}
+
+        public static string ToSqlLike(this string pattern)
+        {
+            return $@"%{ReplaceSqlWildcards(pattern)}%";
+        }
+
+        private static string ReplaceSqlWildcards(string source)
+        {
+            var value = source.Contains('_') ? source.Replace("_", "[_]") : source;
+            value = value.Contains("%") ? value.Replace("%", "[%]") : value;
+
+            return value;
+        }
     }
 }
