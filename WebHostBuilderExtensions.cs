@@ -25,7 +25,7 @@ namespace Arta.Sessions.Api.ArtaInfra
 
             Directory.CreateDirectory("/opt");
 
-            using (var containerInfo = File.AppendText("/opt/containerinfo"))
+            using (var containerInfo = File.AppendText("/opt/containerinfo/containerinfo"))
             {
                 containerInfo.WriteLine($"{DateTime.Now}-{serviceName}-{geoLocation}-{serviceId}");
             }
