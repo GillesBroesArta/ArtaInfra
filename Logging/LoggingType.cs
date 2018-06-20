@@ -4,6 +4,7 @@
     {
         Unknown = 0,
         Request = 1,
-        Response = 2
+        Response = 2,
+        Authentication = 3
     }
 }
