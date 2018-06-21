@@ -23,12 +23,12 @@ namespace Arta.Sessions.Api.ArtaInfra
 
             var vars = Environment.GetEnvironmentVariables();
 
-            Directory.CreateDirectory("/opt");
-
-            using (var containerInfo = File.AppendText("/opt/containerinfo/containerinfo"))
-            {
-                containerInfo.WriteLine($"{DateTime.Now}-{serviceName}-{geoLocation}-{serviceId}");
-            }
+//            Directory.CreateDirectory("/opt");
+//
+//            using (var containerInfo = File.AppendText("/opt/containerinfo/containerinfo"))
+//            {
+//                containerInfo.WriteLine($"{DateTime.Now}-{serviceName}-{geoLocation}-{serviceId}");
+//            }
 
             return webhostBuilder;
         }
