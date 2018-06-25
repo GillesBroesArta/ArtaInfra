@@ -44,23 +44,21 @@ namespace ArtaInfra.Utils.Extensions
             return sql;
         }
 
-        //Does not work
-        //public static bool SqlLike(this DbFunctions _, string matchExpression, string pattern)
-        //{
-        //    return EF.Functions.Like(matchExpression, $@"%{ReplaceSqlWildcards(pattern)}%");
-        //}
-
-        public static string ToSqlLike(this string pattern)
+        /// <summary>
+        /// Automates the standard sorting builder
+        /// </summary>
+        /// <typeparam name="T">Type of the Queryable</typeparam>
+        /// <typeparam name="U">Type of the sorting field</typeparam>
+        /// <param name="query">the IQueryable to perform sorting on</param>
+        /// <param name="func">Lambda containing the sorting field</param>
+        /// <param name="isFirstSortKey">Distinction to know when to use OrderBy (first sorting key) and ThenBy (all next sorting keys)</param>
+        /// <param name="sortAscending">Sort order</param>
+        /// <returns></returns>
+        public static IOrderedQueryable<T> Sort<T, U>(this IQueryable<T> query, Expression<Func<T, U>> func, bool isFirstSortKey, bool sortAscending)
         {
-            return $@"%{ReplaceSqlWildcards(pattern)}%";
-        }
-
-        private static string ReplaceSqlWildcards(string source)
-        {
-            var value = source.Contains('_') ? source.Replace("_", "[_]") : source;
-            value = value.Contains("%") ? value.Replace("%", "[%]") : value;
-
-            return value;
+            return (IOrderedQueryable<T>)query.Provider.CreateQuery<T>(Expression.Call(typeof(Queryable),
+                (isFirstSortKey ? "OrderBy" : "ThenBy") + (sortAscending ? string.Empty : "Descending"),
+                new[] { typeof(T), typeof(U) }, query.Expression, Expression.Quote(func)));
         }
     }
 }
