@@ -45,7 +45,7 @@ namespace ArtaInfra.Utils.Extensions
         }
 
         /// <summary>
-        /// Automates the standard sorting builder
+        /// Replaces the standard sorting builder (.OrderBy(...).ThenBy(...)) by a generic one
         /// </summary>
         /// <typeparam name="T">Type of the Queryable</typeparam>
         /// <typeparam name="U">Type of the sorting field</typeparam>
