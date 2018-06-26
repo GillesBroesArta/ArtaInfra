@@ -50,31 +50,37 @@ namespace ArtaInfra.Utils.Extensions
 
         public static string GetFullLink(IHttpContextAccessor httpContextAccessor, string partner, string reference)
         {
-            var partnerRef = string.IsNullOrEmpty(partner) ? "" : $"/partners/{partner}";
-            return $"{GetBaseLink(httpContextAccessor)}{partnerRef}/{reference}";
+            return GetFullLink(httpContextAccessor, partner, null, reference);
         }
 
+        public static string GetFullLink(IHttpContextAccessor httpContextAccessor, string partner, string csp, string reference)
+        {
+            var cspRef = string.IsNullOrEmpty(csp) ? "" : $"/csps/{csp}";
+            var partnerRef = string.IsNullOrEmpty(partner) ? "" : $"/partners/{partner}";
+            return $"{GetBaseLink(httpContextAccessor)}{cspRef}{partnerRef}/{reference}";
+        }
 
         public static string GetFullCspLink(IHttpContextAccessor httpContextAccessor, string csp, string reference)
         {
-            var cspRef = string.IsNullOrEmpty(csp) ? "" : $"/csps/{csp}";
-            return $"{GetBaseLink(httpContextAccessor)}{cspRef}/{reference}";
+            return GetFullLink(httpContextAccessor, null, csp, reference);
         }
 
         public static Dictionary<string, string> AddLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, string partner, string reference)
         {
+            return AddLink(links, httpContextAccessor, linkName, partner, null, reference);
+        }
+
+        public static Dictionary<string, string> AddLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor, string linkName, string partner, string csp, string reference)
+        {
             linkName = ToFirstCapitalCase(linkName);
-            if (links == null ) links = new Dictionary<string, string>();
-            links.Add($"{linkName}", GetFullLink(httpContextAccessor, partner, reference));
+            if (links == null) links = new Dictionary<string, string>();
+            links.Add($"{linkName}", GetFullLink(httpContextAccessor, partner, csp, reference));
             return links;
         }
 
         public static Dictionary<string, string> AddCspLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor, string linkName, string csp, string reference)
         {
-            linkName = ToFirstCapitalCase(linkName);
-            if (links == null) links = new Dictionary<string, string>();
-            links.Add($"{linkName}", GetFullCspLink(httpContextAccessor, csp, reference));
-            return links;
+            return AddLink(links, httpContextAccessor, linkName, null, csp, reference);
         }
 
         public static Dictionary<string, string> AddPagingLink(this Dictionary<string, string> links, IHttpContextAccessor httpContextAccessor,string linkName, int offset, int limit)
