@@ -91,8 +91,8 @@ namespace ArtaInfra.Utils.Pagination
             _httpContextAccessor = httpContextAccessor;
 
             //Use defaults value according to generic specs 
-	    if (limit < 0)
-                limit = 100;
+	        if (limit < 0) limit = 100;
+            if (offset < 0) offset = 0;
 
             int count;
             //BEWARE: the results can be incorrect, the CountAsync query has a bug, not using the inner join (https://github.com/aspnet/EntityFrameworkCore/issues/8201)
@@ -125,8 +125,8 @@ namespace ArtaInfra.Utils.Pagination
             _httpContextAccessor = httpContextAccessor;
 
             //Use defaults value according to generic specs 
-            if (limit < 0)
-                limit = 100;
+            if (limit < 0) limit = 100;
+            if (offset < 0) offset = 0;
 
             var count = source.Count;
             if (count == 0 && totalCount == 0)
