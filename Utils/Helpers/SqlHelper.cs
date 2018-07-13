@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ArtaInfra.Utils.Extensions;
+using MySql.Data.MySqlClient;
 
 namespace ArtaInfra.Utils.Helpers
 {
@@ -15,7 +16,7 @@ namespace ArtaInfra.Utils.Helpers
         /// <param name="connectionString">Retrieves the count for the query in a separate connection</param>
         /// <param name="query">Parametrized query</param>
         /// <returns></returns>
-        public static async Task<int> GetCountFromInnerJoin<T>(string connectionString, IQueryable<T> query) where T : class
+        public static async Task<int> GetCountFromInnerJoin<T>(string connectionString, IQueryable<T> query, bool mySql = false) where T : class
         {
             //------Workaround CountAsync query
             //Workaround for Entity framework count bug on inner joins
@@ -27,6 +28,9 @@ namespace ArtaInfra.Utils.Helpers
             //Order by can't be used in a count qeuery
             var orderRegex = @"ORDER.*";
             countQuery = Regex.Replace(countQuery, orderRegex, " ");
+
+            if (mySql)
+                return await SqlSecondConnectionGetResultFromMySql(connectionString, countQuery);
 
             return await SqlSecondConnectionGetResult(connectionString, countQuery);
             //------Workaround
@@ -43,6 +47,19 @@ namespace ArtaInfra.Utils.Helpers
                 result = (int)await cmd.ExecuteScalarAsync();
             }
             return result;
+        }
+
+        public static async Task<int> SqlSecondConnectionGetResultFromMySql(string connectionString, string command)
+        {
+            long result;
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                var cmd = new MySqlCommand(command, connection);
+                result = (long)await cmd.ExecuteScalarAsync();
+            }
+            return (int)result;
         }
     }
 }
