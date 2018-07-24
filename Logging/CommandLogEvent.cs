@@ -126,7 +126,8 @@ namespace Arta.Infrastructure.Logging
         SumPlan = 120,
         EventManagement = 121,
         BundleGrantedEndUser = 122,
-        IotProductPlan = 123
+        IotProductPlan = 123,
+        IoTBulkAction = 124,
     }
 
     public enum AccountType
