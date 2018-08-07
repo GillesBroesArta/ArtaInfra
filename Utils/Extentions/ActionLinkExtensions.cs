@@ -28,6 +28,12 @@ namespace ArtaInfra.Utils.Extensions
             return httpContextAccessor.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Uri", out stringValues) ? stringValues.FirstOrDefault() : httpContextAccessor.HttpContext.Request.Path.ToString();
         }
 
+        public static string GetForwardedPathHeader(this IHttpContextAccessor httpContextAccessor)
+        {
+            StringValues stringValues;
+            return httpContextAccessor.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Path", out stringValues) ? stringValues.FirstOrDefault() : httpContextAccessor.HttpContext.Request.Path.ToString();
+        }
+
         public static string GetSelfLink(this IHttpContextAccessor httpContextAccessor)
         {
             var urlPath = GetForwardedUriHeader(httpContextAccessor);
@@ -36,7 +42,7 @@ namespace ArtaInfra.Utils.Extensions
         
         public static string GetBaseLink(this IHttpContextAccessor httpContextAccessor)
         {
-            var baseUrl = GetForwardedHostHeader(httpContextAccessor);
+            var baseUrl = $"{GetForwardedHostHeader(httpContextAccessor).RemoveTrailingSlash()}{GetForwardedPathHeader(httpContextAccessor)}";
             var protocol = GetForwardedProtoHeader(httpContextAccessor);
             return $"{protocol}://{baseUrl.RemoveTrailingSlash()}";
         }
