@@ -36,13 +36,15 @@ namespace ArtaInfra.Utils.Extensions
 
         public static string GetSelfLink(this IHttpContextAccessor httpContextAccessor)
         {
-            var urlPath = GetForwardedUriHeader(httpContextAccessor);
-            return $"{GetBaseLink(httpContextAccessor)}{urlPath}{httpContextAccessor.HttpContext.Request.QueryString}";
+            var baseLink = GetBaseLink(httpContextAccessor);
+            var urlPath = GetForwardedPathHeader(httpContextAccessor);
+            var queryString = httpContextAccessor.HttpContext.Request.QueryString;
+            return $"{baseLink}{urlPath}{queryString}";
         }
         
         public static string GetBaseLink(this IHttpContextAccessor httpContextAccessor)
         {
-            var baseUrl = $"{GetForwardedHostHeader(httpContextAccessor).RemoveTrailingSlash()}{GetForwardedPathHeader(httpContextAccessor)}";
+            var baseUrl = $"{GetForwardedHostHeader(httpContextAccessor).RemoveTrailingSlash()}";
             var protocol = GetForwardedProtoHeader(httpContextAccessor);
             return $"{protocol}://{baseUrl.RemoveTrailingSlash()}";
         }
