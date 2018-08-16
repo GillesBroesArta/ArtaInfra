@@ -31,7 +31,7 @@ namespace ArtaInfra.Utils.Extensions
         public static string GetForwardedPathHeader(this IHttpContextAccessor httpContextAccessor)
         {
             StringValues stringValues;
-            return httpContextAccessor.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Path", out stringValues) ? stringValues.FirstOrDefault() : httpContextAccessor.HttpContext.Request.Path.ToString();
+            return httpContextAccessor.HttpContext.Request.Headers.TryGetValue("X-Forwarded-Path", out stringValues) ? stringValues.FirstOrDefault() : "";
         }
 
         public static string GetSelfLink(this IHttpContextAccessor httpContextAccessor)
